@@ -9,7 +9,7 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
    public class TCategory : BaseEntity<int>
     {
-        public string Name { get; set; }
-        public ICollection<Technician> Technicians { get; set; } = new List<Technician>();
+        public string Name { get; set; } // name of category 
+        public ICollection<Technician> Technicians { get; set; } = new List<Technician>(); // List OF Technicains
     }
 }

@@ -13,7 +13,7 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         public TimeOnly EndWorking { get; set; }
         public string Description { get; set; }
 
-
+        public int ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
 
