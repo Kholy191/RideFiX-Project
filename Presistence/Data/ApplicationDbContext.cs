@@ -1,5 +1,4 @@
-﻿
-using Domain.Entities.IdentityEntities;
+﻿using Domain.Entities.IdentityEntities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Presistence.Data.Configurations;

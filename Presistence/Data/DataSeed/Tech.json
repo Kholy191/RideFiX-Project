@@ -1,0 +1,10 @@
+﻿{
+    "Technician": [
+        {
+            "StartWorkingTime": "10:00",
+            "EndWorkingTime": "16:00",
+            "Description": "عفشجي سيارات",
+            "CategoryId": 0
+        }
+    ]
+}
