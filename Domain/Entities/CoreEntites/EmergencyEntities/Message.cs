@@ -19,7 +19,7 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
 
         [ForeignKey("ApplicationUser")]
 
-        public int ApplicationId { get; set; }
+        public string ApplicationId { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
 
