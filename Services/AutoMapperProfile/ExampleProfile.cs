@@ -1,26 +1,25 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.ComponentModel;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using Domain.Entities.ProductEntities;
-//using Microsoft.Extensions.Configuration;
-//using Shared.DatatoObject_Dtos_.ProductDtos;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace Services.AutoMapperProfile
-//{
-//    public class ExampleProfile : AutoMapper.Profile
-//    {
-//        public ExampleProfile() 
-//        {
-//            CreateMap<Product, ProductDto>()
-//                .ForMember(dest => dest.ProductBrandName, opt => opt.MapFrom(src => src.ProductBrand.Name))
-//                .ForMember(dest => dest.ProductTypeName, opt => opt.MapFrom(src => src.ProductType.Name))
-//                .ForMember(dest => dest.PictureUrl, opt => opt.MapFrom<PictureUrlResolver>());
+using Microsoft.Extensions.Configuration;
 
-//            CreateMap<ProductBrand, BrandDto>();
-//            CreateMap<ProductType, ProductTypeDto>();
-//        }
-//    }
-//}
+
+namespace Services.AutoMapperProfile
+{
+    public class ExampleProfile : AutoMapper.Profile
+    {
+        //        public ExampleProfile() 
+        //        {
+        //            CreateMap<Product, ProductDto>()
+        //                .ForMember(dest => dest.ProductBrandName, opt => opt.MapFrom(src => src.ProductBrand.Name))
+        //                .ForMember(dest => dest.ProductTypeName, opt => opt.MapFrom(src => src.ProductType.Name))
+        //                .ForMember(dest => dest.PictureUrl, opt => opt.MapFrom<PictureUrlResolver>());
+
+        //            CreateMap<ProductBrand, BrandDto>();
+    }
+}
+
