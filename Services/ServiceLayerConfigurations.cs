@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ServiceAbstraction;
+using Services.AutoMapperProfile;
+
 
 namespace Services
 {
@@ -8,6 +10,7 @@ namespace Services
         public static IServiceCollection AddServiceConfig(this IServiceCollection Services)
         {
             Services.AddScoped<IServiceManager, ServiceManager>();
+            Services.AddAutoMapper(typeof(ExampleProfile));
             return Services;
         }
     }
