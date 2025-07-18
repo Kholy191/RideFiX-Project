@@ -11,6 +11,5 @@ namespace Services
 {
     public class ServiceManager(IMapper mapper, IUnitOfWork unitOfWork) : IServiceManager
     {
-
     }
 }
