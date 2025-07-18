@@ -9,6 +9,7 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
   public  class CarOwner : IcanOrder
     {
+        public int ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; } 
         public ICollection<ChatSession> ChatSessions { get; set; } = new List<ChatSession>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();

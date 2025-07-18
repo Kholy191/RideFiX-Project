@@ -28,7 +28,7 @@ namespace Presistence.Data.Configurations
 
            
             builder.HasOne(m => m.ApplicationUser)
-                   .WithMany(m=>m.messages)
+                   .WithMany()
                    .HasForeignKey(m => m.ApplicationId)
                    .IsRequired()
                    .OnDelete(DeleteBehavior.NoAction); 
