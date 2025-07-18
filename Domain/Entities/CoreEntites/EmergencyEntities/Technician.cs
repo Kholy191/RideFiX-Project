@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
-   public class Technician : IcanOrder
+   public class Technician : BaseEntity<int>
     {
         public TimeOnly StartWorking { get; set; }
         public TimeOnly EndWorking { get; set; }
         public string Description { get; set; }
 
-        public int ApplicationUserId { get; set; }
+        public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
 

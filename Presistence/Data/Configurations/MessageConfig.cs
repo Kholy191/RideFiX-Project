@@ -26,14 +26,14 @@ namespace Presistence.Data.Configurations
             builder.Property(m => m.IsSeen)
                    .IsRequired();
 
-           
-            builder.HasOne(m => m.ApplicationUser)
-                   .WithMany()
-                   .HasForeignKey(m => m.ApplicationId)
-                   .IsRequired()
-                   .OnDelete(DeleteBehavior.NoAction); 
 
-          
+            builder.HasOne(m => m.ApplicationUser)
+            .WithMany(m => m.messages)
+                .HasForeignKey(m => m.ApplicationId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+
+
         }
 
     }

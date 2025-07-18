@@ -19,7 +19,6 @@ namespace Domain.Entities.IdentityEntities
         public string IdentityImageUrl { get; set; }
         public string FaceImageUrl { get; set; }
 
-        public ICollection<IcanOrder> IcanOrders { get; set; } = new List<IcanOrder>();
 
         public ICollection<Message> messages { get; set; } = new List<Message>();
     }
