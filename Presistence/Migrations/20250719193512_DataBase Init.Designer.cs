@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Presistence.Data;
 
@@ -11,9 +12,11 @@ using Presistence.Data;
 namespace Presistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250719193512_DataBase Init")]
+    partial class DataBaseInit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,9 +161,6 @@ namespace Presistence.Migrations
 
                     b.HasKey("MessageId", "AttachmentUrl");
 
-                    b.HasIndex("MessageId")
-                        .IsUnique();
-
                     b.ToTable("MessageAttachment");
                 });
 
@@ -196,8 +196,9 @@ namespace Presistence.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Rate")
-                        .HasColumnType("int");
+                    b.Property<string>("Rate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TechnicianId")
                         .HasColumnType("int");
@@ -569,8 +570,8 @@ namespace Presistence.Migrations
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.MessageAttachment", b =>
                 {
                     b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.Message", "Message")
-                        .WithOne("MessageAttachment")
-                        .HasForeignKey("Domain.Entities.CoreEntites.EmergencyEntities.MessageAttachment", "MessageId")
+                        .WithMany()
+                        .HasForeignKey("MessageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -701,11 +702,6 @@ namespace Presistence.Migrations
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.EmergencyRequest", b =>
                 {
                     b.Navigation("requestAttachments");
-                });
-
-            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Message", b =>
-                {
-                    b.Navigation("MessageAttachment");
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Technician", b =>

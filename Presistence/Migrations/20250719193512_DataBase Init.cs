@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Presistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreation : Migration
+    public partial class DataBaseInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -247,17 +247,19 @@ namespace Presistence.Migrations
                 name: "emergencyRequests",
                 columns: table => new
                 {
-                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TechnicainId = table.Column<int>(type: "int", nullable: false),
-                    CarOwnerId = table.Column<int>(type: "int", nullable: false),
-                    CallState = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
-                    EndTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CallState = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TechnicainId = table.Column<int>(type: "int", nullable: false),
+                    CarOwnerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_emergencyRequests", x => new { x.CarOwnerId, x.TechnicainId, x.TimeStamp });
+                    table.PrimaryKey("PK_emergencyRequests", x => x.Id);
                     table.ForeignKey(
                         name: "FK_emergencyRequests_carOwners_CarOwnerId",
                         column: x => x.CarOwnerId,
@@ -347,6 +349,42 @@ namespace Presistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "RequestAttachment",
+                columns: table => new
+                {
+                    AttachmentUrl = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmergencyRequestId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RequestAttachment", x => new { x.EmergencyRequestId, x.AttachmentUrl });
+                    table.ForeignKey(
+                        name: "FK_RequestAttachment_emergencyRequests_EmergencyRequestId",
+                        column: x => x.EmergencyRequestId,
+                        principalTable: "emergencyRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MessageAttachment",
+                columns: table => new
+                {
+                    AttachmentUrl = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MessageId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageAttachment", x => new { x.MessageId, x.AttachmentUrl });
+                    table.ForeignKey(
+                        name: "FK_MessageAttachment_messages_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "messages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -400,6 +438,11 @@ namespace Presistence.Migrations
                 name: "IX_chatSessions_TechnicianId",
                 table: "chatSessions",
                 column: "TechnicianId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_emergencyRequests_CarOwnerId",
+                table: "emergencyRequests",
+                column: "CarOwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_emergencyRequests_TechnicainId",
@@ -456,10 +499,10 @@ namespace Presistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "emergencyRequests");
+                name: "MessageAttachment");
 
             migrationBuilder.DropTable(
-                name: "messages");
+                name: "RequestAttachment");
 
             migrationBuilder.DropTable(
                 name: "reviews");
@@ -471,10 +514,16 @@ namespace Presistence.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "chatSessions");
+                name: "messages");
+
+            migrationBuilder.DropTable(
+                name: "emergencyRequests");
 
             migrationBuilder.DropTable(
                 name: "categories");
+
+            migrationBuilder.DropTable(
+                name: "chatSessions");
 
             migrationBuilder.DropTable(
                 name: "carOwners");

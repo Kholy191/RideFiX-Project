@@ -1,37 +1,35 @@
-{
-    "Users": [
-        {
-            "SSN": "77947680449916",
-            "Name": "Hassan Gamal",
-            "UserName": "hassan91",
-            "BirthDate": "1991-01-10",
-            "Address": "Aswan",
-            "Gender": "male",
-            "Email": "hassan.gamal@example.com",
-            "IdentityImageUrl": "https://randomuser.me/api/portraits/men/43.jpg",
-            "FaceImageUrl": "https://randomuser.me/api/portraits/men/34.jpg"
-        },
-        {
-            "SSN": "22501272687080",
-            "Name": "Sara Gamal",
-            "UserName": "sara2000",
-            "BirthDate": "2000-02-08",
-            "Address": "Aswan",
-            "Gender": "female",
-            "Email": "sara.gamal@example.com",
-            "IdentityImageUrl": "https://randomuser.me/api/portraits/women/35.jpg",
-            "FaceImageUrl": "https://randomuser.me/api/portraits/women/46.jpg"
-        },
-        {
-            "SSN": "83318117972462",
-            "Name": "Mohamed Gamal",
-            "UserName": "mo_gamal96",
-            "BirthDate": "1996-06-08",
-            "Address": "Alexandria",
-            "Gender": "male",
-            "Email": "mohamed.gamal@example.com",
-            "IdentityImageUrl": "https://randomuser.me/api/portraits/women/82.jpg",
-            "FaceImageUrl": "https://randomuser.me/api/portraits/women/4.jpg"
-        }
-    ]
-}
+[
+    {
+        "SSN": "77947680449916",
+        "Name": "Hassan Gamal",
+        "UserName": "hassan91",
+        "BirthDate": "1991-01-10",
+        "Address": "Aswan",
+        "Gender": "male",
+        "Email": "hassan.gamal@example.com",
+        "IdentityImageUrl": "https://randomuser.me/api/portraits/men/43.jpg",
+        "FaceImageUrl": "https://randomuser.me/api/portraits/men/34.jpg"
+    },
+    {
+        "SSN": "22501272687080",
+        "Name": "Sara Gamal",
+        "UserName": "sara2000",
+        "BirthDate": "2000-02-08",
+        "Address": "Aswan",
+        "Gender": "female",
+        "Email": "sara.gamal@example.com",
+        "IdentityImageUrl": "https://randomuser.me/api/portraits/women/35.jpg",
+        "FaceImageUrl": "https://randomuser.me/api/portraits/women/46.jpg"
+    },
+    {
+        "SSN": "83318117972462",
+        "Name": "Mohamed Gamal",
+        "UserName": "mo_gamal96",
+        "BirthDate": "1996-06-08",
+        "Address": "Alexandria",
+        "Gender": "male",
+        "Email": "mohamed.gamal@example.com",
+        "IdentityImageUrl": "https://randomuser.me/api/portraits/women/82.jpg",
+        "FaceImageUrl": "https://randomuser.me/api/portraits/women/4.jpg"
+    }
+]

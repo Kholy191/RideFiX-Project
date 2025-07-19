@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using Domain.Contracts;
+using Domain.Entities.IdentityEntities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Presistence;
 using Presistence.Data;
-using Presistence.Repositories;
 using Presistence.unitofwork;
-using ServiceAbstraction;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 
 
 namespace Presistence
@@ -27,6 +25,8 @@ namespace Presistence
                           sqlOptions => sqlOptions.EnableRetryOnFailure()
                     ));
             Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            Services.AddScoped<IDataSeeding, DataSeeding>();
+
             return Services;
         }
     }

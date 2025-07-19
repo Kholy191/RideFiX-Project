@@ -23,5 +23,7 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
 
         public ApplicationUser ApplicationUser { get; set; }
 
+        public MessageAttachment? MessageAttachment { get; set; }
+
     }
 }
