@@ -1,0 +1,32 @@
+[
+    {
+        "CategoryId": 1,
+        "TechnicainId": 1,
+        "CarOwnerId": 1,
+        "TimeStamp": "2025-07-18T09:00:00",
+        "EndTimeStamp": "2025-07-18T10:00:00",
+        "CallState": 1,
+        "IsCompleted": true,
+        "Description": "Battery dead, needs replacement"
+    },
+    {
+        "CategoryId": 1,
+        "TechnicainId": 1,
+        "CarOwnerId": 1,
+        "TimeStamp": "2025-07-18T11:00:00",
+        "EndTimeStamp": "2025-07-18T11:45:00",
+        "CallState": 3,
+        "IsCompleted": false,
+        "Description": "Flat tire needs replacing"
+    },
+    {
+        "CategoryId": 1,
+        "TechnicainId": 1,
+        "CarOwnerId": 1,
+        "TimeStamp": "2025-07-18T12:30:00",
+        "EndTimeStamp": "2025-07-18T13:10:00",
+        "CallState": 2,
+        "IsCompleted": false,
+        "Description": "Flat tire needs replacing"
+    }
+]

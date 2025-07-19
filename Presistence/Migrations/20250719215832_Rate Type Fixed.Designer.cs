@@ -12,8 +12,8 @@ using Presistence.Data;
 namespace Presistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250718220733_InitialCreation")]
-    partial class InitialCreation
+    [Migration("20250719215832_Rate Type Fixed")]
+    partial class RateTypeFixed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,8 +78,28 @@ namespace Presistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.EmergencyRequest", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CallState")
+                        .HasMaxLength(50)
+                        .HasColumnType("int");
+
                     b.Property<int>("CarOwnerId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndTimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("TechnicainId")
                         .HasColumnType("int");
@@ -87,21 +107,9 @@ namespace Presistence.Migrations
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CallState")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.HasKey("Id");
 
-                    b.Property<DateTime?>("EndTimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
-
-                    b.HasKey("CarOwnerId", "TechnicainId", "TimeStamp");
+                    b.HasIndex("CarOwnerId");
 
                     b.HasIndex("TechnicainId");
 
@@ -143,6 +151,35 @@ namespace Presistence.Migrations
                     b.ToTable("messages");
                 });
 
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.MessageAttachment", b =>
+                {
+                    b.Property<int>("MessageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AttachmentUrl")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("MessageId", "AttachmentUrl");
+
+                    b.HasIndex("MessageId")
+                        .IsUnique();
+
+                    b.ToTable("MessageAttachment");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.RequestAttachment", b =>
+                {
+                    b.Property<int>("EmergencyRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AttachmentUrl")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("EmergencyRequestId", "AttachmentUrl");
+
+                    b.ToTable("RequestAttachment");
+                });
+
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Review", b =>
                 {
                     b.Property<int>("Id")
@@ -162,9 +199,8 @@ namespace Presistence.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Rate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Rate")
+                        .HasColumnType("int");
 
                     b.Property<int>("TechnicianId")
                         .HasColumnType("int");
@@ -533,6 +569,28 @@ namespace Presistence.Migrations
                     b.Navigation("ChatSession");
                 });
 
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.MessageAttachment", b =>
+                {
+                    b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.Message", "Message")
+                        .WithOne("MessageAttachment")
+                        .HasForeignKey("Domain.Entities.CoreEntites.EmergencyEntities.MessageAttachment", "MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Message");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.RequestAttachment", b =>
+                {
+                    b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.EmergencyRequest", "EmergencyRequest")
+                        .WithMany("requestAttachments")
+                        .HasForeignKey("EmergencyRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EmergencyRequest");
+                });
+
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Review", b =>
                 {
                     b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.CarOwner", "CarOwner")
@@ -641,6 +699,16 @@ namespace Presistence.Migrations
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.ChatSession", b =>
                 {
                     b.Navigation("massages");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.EmergencyRequest", b =>
+                {
+                    b.Navigation("requestAttachments");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Message", b =>
+                {
+                    b.Navigation("MessageAttachment");
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Technician", b =>

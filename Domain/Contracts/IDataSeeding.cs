@@ -9,6 +9,7 @@ namespace Domain.Contracts
     public interface IDataSeeding
     {
         public Task SeedDataAsync();
+        public Task SeedCategories();
         public Task SeedIdentityDataAsync();
     }
 }

@@ -1,0 +1,9 @@
+[
+    {
+        "CarOwnerId": 1,
+        "TechnicianId": 1,
+        "Rate": 5,
+        "Comment": "Great and fast service",
+        "DateTime": "2025-07-18T11:00:00"
+    }
+]

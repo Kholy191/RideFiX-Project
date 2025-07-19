@@ -1,0 +1,9 @@
+[
+    {
+        "StartAt": "2025-07-18T09:15:00",
+        "EndAT": "2025-07-18T09:45:00",
+        "CarOwnerId": 1,
+        "TechnicianId": 1,
+        "IsClosed": false
+    }
+]

@@ -9,7 +9,7 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
    public class Review : BaseEntity<int>
     {
-        public string Rate { get; set; }
+        public int Rate { get; set; }
         public string Comment { get; set; }
         public DateTime DateTime { get; set; }
 
