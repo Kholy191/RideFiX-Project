@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace SharedData.Enums
 {
-    public class BaseEntity <Tk>
+    public enum RequestState
     {
-        public Tk Id { get; set; }
+        Answered = 1,
+        Rejected = 2,
+        Waiting = 3,
     }
 }
