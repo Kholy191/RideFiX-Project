@@ -22,7 +22,10 @@ namespace Presistence
         public static IServiceCollection AddPresistenceConfig(this IServiceCollection Services, IConfiguration _configuration)
         {
             Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+                    options.UseSqlServer(
+                        _configuration.GetConnectionString("DefaultConnection"),
+                          sqlOptions => sqlOptions.EnableRetryOnFailure()
+                    ));
             Services.AddScoped<IUnitOfWork, UnitOfWork>();
             return Services;
         }
