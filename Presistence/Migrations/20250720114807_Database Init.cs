@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Presistence.Migrations
 {
     /// <inheritdoc />
-    public partial class DataBaseInit : Migration
+    public partial class DatabaseInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -203,7 +203,8 @@ namespace Presistence.Migrations
                     StartWorking = table.Column<TimeOnly>(type: "time", nullable: false),
                     EndWorking = table.Column<TimeOnly>(type: "time", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    government = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -254,6 +255,8 @@ namespace Presistence.Migrations
                     TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false),
                     TechnicainId = table.Column<int>(type: "int", nullable: false),
                     CarOwnerId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -278,7 +281,7 @@ namespace Presistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Rate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rate = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CarOwnerId = table.Column<int>(type: "int", nullable: false),
@@ -448,6 +451,12 @@ namespace Presistence.Migrations
                 name: "IX_emergencyRequests_TechnicainId",
                 table: "emergencyRequests",
                 column: "TechnicainId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageAttachment_MessageId",
+                table: "MessageAttachment",
+                column: "MessageId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_messages_ApplicationId",

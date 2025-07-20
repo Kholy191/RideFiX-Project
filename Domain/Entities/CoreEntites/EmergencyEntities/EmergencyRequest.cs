@@ -14,6 +14,8 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         public DateTime TimeStamp { get; set; }
         public DateTime? EndTimeStamp { get; set; }
         public string Description { get; set; } 
+        public Double Latitude { get; set; }
+        public Double Longitude { get; set; }
 
         //navigations
         public int TechnicainId { get; set; }

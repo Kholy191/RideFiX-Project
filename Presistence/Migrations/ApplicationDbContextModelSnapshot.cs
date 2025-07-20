@@ -98,6 +98,12 @@ namespace Presistence.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
 
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
                     b.Property<int>("TechnicainId")
                         .HasColumnType("int");
 
@@ -250,6 +256,9 @@ namespace Presistence.Migrations
 
                     b.Property<TimeOnly>("StartWorking")
                         .HasColumnType("time");
+
+                    b.Property<int>("government")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

@@ -7,7 +7,9 @@
         "EndTimeStamp": "2025-07-18T10:00:00",
         "CallState": 1,
         "IsCompleted": true,
-        "Description": "Battery dead, needs replacement"
+        "Description": "Battery dead, needs replacement",
+        "Latitude": 30.0444,
+        "Longitude": 31.2357
     },
     {
         "CategoryId": 1,
@@ -17,7 +19,9 @@
         "EndTimeStamp": "2025-07-18T11:45:00",
         "CallState": 3,
         "IsCompleted": false,
-        "Description": "Flat tire needs replacing"
+        "Description": "Flat tire needs replacing",
+        "Latitude": 30.0444,
+        "Longitude": 31.2357
     },
     {
         "CategoryId": 1,
@@ -27,6 +31,8 @@
         "EndTimeStamp": "2025-07-18T13:10:00",
         "CallState": 2,
         "IsCompleted": false,
-        "Description": "Flat tire needs replacing"
+        "Description": "Flat tire needs replacing",
+        "Latitude" : 30.0444,
+        "Longitude": 31.2357
     }
 ]
