@@ -12,8 +12,8 @@ using Presistence.Data;
 namespace Presistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250719215832_Rate Type Fixed")]
-    partial class RateTypeFixed
+    [Migration("20250720114807_Database Init")]
+    partial class DatabaseInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,6 +100,12 @@ namespace Presistence.Migrations
 
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<int>("TechnicainId")
                         .HasColumnType("int");
@@ -253,6 +259,9 @@ namespace Presistence.Migrations
 
                     b.Property<TimeOnly>("StartWorking")
                         .HasColumnType("time");
+
+                    b.Property<int>("government")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

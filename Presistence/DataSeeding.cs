@@ -60,6 +60,8 @@ namespace Presistence
                     {
                         await _context.chatSessions.AddRangeAsync(Chatsession);
                     }
+                    await _context.SaveChangesAsync();
+
                 }
 
                 if (!await _context.emergencyRequests.AnyAsync())
@@ -70,6 +72,8 @@ namespace Presistence
                     {
                         await _context.emergencyRequests.AddRangeAsync(requests);
                     }
+                    await _context.SaveChangesAsync();
+
                 }
 
                 if (!await _context.messages.AnyAsync())
@@ -89,6 +93,8 @@ namespace Presistence
                     {
                         await _context.messages.AddRangeAsync(_messages);
                     }
+                    await _context.SaveChangesAsync();
+
                 }
 
                 if (!await _context.reviews.AnyAsync())

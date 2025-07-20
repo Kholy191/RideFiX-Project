@@ -12,8 +12,8 @@ using Presistence.Data;
 namespace Presistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250719194559_Message Fix")]
-    partial class MessageFix
+    [Migration("20250720123731_Emergency CategoryDb")]
+    partial class EmergencyCategoryDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,17 +101,28 @@ namespace Presistence.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
 
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
                     b.Property<int>("TechnicainId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("categoryId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CarOwnerId");
 
                     b.HasIndex("TechnicainId");
+
+                    b.HasIndex("categoryId");
 
                     b.ToTable("emergencyRequests");
                 });
@@ -199,9 +210,8 @@ namespace Presistence.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Rate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Rate")
+                        .HasColumnType("int");
 
                     b.Property<int>("TechnicianId")
                         .HasColumnType("int");
@@ -254,6 +264,9 @@ namespace Presistence.Migrations
 
                     b.Property<TimeOnly>("StartWorking")
                         .HasColumnType("time");
+
+                    b.Property<int>("government")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -546,9 +559,17 @@ namespace Presistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.TCategory", "category")
+                        .WithMany("EmergencyRequests")
+                        .HasForeignKey("categoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("CarOwner");
 
                     b.Navigation("Technician");
+
+                    b.Navigation("category");
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Message", b =>
@@ -709,8 +730,12 @@ namespace Presistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Message", b =>
                 {
-                    b.Navigation("MessageAttachment")
-                        .IsRequired();
+                    b.Navigation("MessageAttachment");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.TCategory", b =>
+                {
+                    b.Navigation("EmergencyRequests");
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Technician", b =>

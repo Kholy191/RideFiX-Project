@@ -3,6 +3,7 @@
         "StartWorking": "10:00",
         "EndWorking": "16:00",
         "Description": "عفشجي سيارات",
-        "ApplicationUserId": "12345678-abcd-1234-abcd-1234567890ab"
+        "ApplicationUserId": "12345678-abcd-1234-abcd-1234567890ab",
+        "government": 0
     }
 ]
