@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.IdentityEntities;
+using SharedData.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,6 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         public ICollection<TCategory> TCategories { get; set; } = new List<TCategory>();
         public ICollection<Review> reviews { get; set; } = new List<Review>();
         public ICollection<EmergencyRequest> EmergencyRequests { get; set; } = new List<EmergencyRequest>();    
+        public Government government { get; set; }
     }
 }

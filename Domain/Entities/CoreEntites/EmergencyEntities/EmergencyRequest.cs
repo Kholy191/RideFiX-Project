@@ -8,7 +8,7 @@ using SharedData.Enums;
 
 namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
-   public class EmergencyRequest : BaseEntity<int>
+    public class EmergencyRequest : BaseEntity<int>
     {
         public RequestState CallState { get; set; }
         public bool IsCompleted { get; set; }
@@ -26,5 +26,6 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         public int CarOwnerId { get; set; }
         public CarOwner CarOwner { get; set; }
         public ICollection<RequestAttachment>? requestAttachments { get; set; } = new HashSet<RequestAttachment>();
+        public TCategory category { get; set; }
     }
 }
