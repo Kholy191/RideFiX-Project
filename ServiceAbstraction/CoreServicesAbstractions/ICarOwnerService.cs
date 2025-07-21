@@ -1,4 +1,4 @@
-﻿using SharedData.DTOs.RequestsDTOs;
+﻿using SharedData.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ServiceAbstraction.CoreServicesAbstractions
 {
-    public interface IRequestServices
+    public interface ICarOwnerService
     {
-        public Task<CreatePreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request);
+        
     }
 }
