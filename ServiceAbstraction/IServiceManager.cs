@@ -8,5 +8,6 @@ namespace ServiceAbstraction
 {
     public interface IServiceManager
     {
+        //test
     }
 }
