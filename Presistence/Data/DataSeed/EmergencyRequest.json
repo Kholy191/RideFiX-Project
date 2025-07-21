@@ -1,6 +1,5 @@
 [
     {
-        "CategoryId": 1,
         "TechnicainId": 1,
         "CarOwnerId": 1,
         "TimeStamp": "2025-07-18T09:00:00",
@@ -9,10 +8,10 @@
         "IsCompleted": true,
         "Description": "Battery dead, needs replacement",
         "Latitude": 30.0444,
-        "Longitude": 31.2357
+        "Longitude": 31.2357,
+        "categoryId": 1
     },
     {
-        "CategoryId": 1,
         "TechnicainId": 1,
         "CarOwnerId": 1,
         "TimeStamp": "2025-07-18T11:00:00",
@@ -21,10 +20,10 @@
         "IsCompleted": false,
         "Description": "Flat tire needs replacing",
         "Latitude": 30.0444,
-        "Longitude": 31.2357
+        "Longitude": 31.2357,
+        "categoryId": 1
     },
     {
-        "CategoryId": 1,
         "TechnicainId": 1,
         "CarOwnerId": 1,
         "TimeStamp": "2025-07-18T12:30:00",
@@ -32,7 +31,8 @@
         "CallState": 2,
         "IsCompleted": false,
         "Description": "Flat tire needs replacing",
-        "Latitude" : 30.0444,
-        "Longitude": 31.2357
-    }
+        "Latitude": 30.0444,
+        "Longitude": 31.2357,
+        "categoryId": 1
+
 ]

@@ -15,4 +15,8 @@
     <None Remove="test\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\CarOwnerDTOs\" />
+  </ItemGroup>
+
 </Project>
