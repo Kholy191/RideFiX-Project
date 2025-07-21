@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Domain.Contracts;
+using Microsoft.Extensions.DependencyInjection;
+using Service.AutoMapperProfile;
 using ServiceAbstraction;
-using Services.AutoMapperProfile;
 
 
 namespace Services
@@ -10,7 +11,7 @@ namespace Services
         public static IServiceCollection AddServiceConfig(this IServiceCollection Services)
         {
             Services.AddScoped<IServiceManager, ServiceManager>();
-            Services.AddAutoMapper(typeof(ExampleProfile));
+            Services.AddAutoMapper(typeof(PreRequestMapConfig));
             return Services;
         }
     }

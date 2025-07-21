@@ -2,8 +2,9 @@
 using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities.CoreEntites.EmergencyEntities;
+using Service.Specification_Implementation;
 using ServiceAbstraction.CoreServicesAbstractions;
-using SharedData.DTOs.CarOwnerDTOs.Requests;
+using SharedData.DTOs.RequestsDTOs;
 using SharedData.DTOs.TechnicianDTOs;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.CoreServices.TechniciansServices
+namespace Service.CoreServices
 {
     class TechnicianService : ITechnicianService
     {
@@ -52,8 +53,21 @@ namespace Service.CoreServices.TechniciansServices
 
         public async Task<List<FilteredTechniciansDTO>> GetTechniciansByFilterAsync(CreatePreRequestDTO request)
         {
-            throw new NotImplementedException();
-            
+            TimeOnly currentTime = TimeOnly.FromDateTime(DateTime.Now);
+            string city = await GetCity(request.Latitude, request.Longitude);
+            if (string.IsNullOrEmpty(city))
+            {
+                throw new ArgumentException("لم يتم العثور على المدينة بناءً على الإحداثيات المقدمة.");
+            }
+
+            var spec = new TechniciansSpecification(currentTime, city, request.categoryId);
+
+            var filteredTechnicians = await unitOfWork.GetRepository<Technician, int>()
+                .GetAllAsync(spec);
+
+            var mappedTechnicians = mapper.Map<IEnumerable<Technician>, IEnumerable<FilteredTechniciansDTO>>(filteredTechnicians).ToList();
+            return mappedTechnicians;
+
         }
 
     }
