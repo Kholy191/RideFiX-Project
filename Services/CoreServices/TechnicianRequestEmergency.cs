@@ -5,6 +5,7 @@ using Service.Specification_Implementation;
 using ServiceAbstraction.CoreServicesAbstractions;
 using SharedData.DTOs.TechnicianEmergencyRequestDTOs;
 using SharedData.Enums;
+using SharedData.QueryModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,9 +29,11 @@ namespace Service.CoreServices.TechniciansServices
             throw new NotImplementedException();
         }
 
-        public Task<List<EmergencyRequestDetailsDTO>> GetAllAcceptedRequestsAsync(int technicianId)
+        public async Task<List<EmergencyRequestDetailsDTO>> GetAllAcceptedRequestsAsync(int tecId)
         {
-            throw new NotImplementedException();
+            var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
+            var allRequests = await repo.GetAllAsync(new EmergencyRequestSpecification(new RequestQueryData() { TechnicainId = tecId ,CallState=RequestState.Answered})) ;
+            return mapper.Map<List<EmergencyRequestDetailsDTO>>(allRequests);
         }
 
         public Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync()

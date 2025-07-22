@@ -18,8 +18,10 @@ namespace Service.AutoMapperProfile
             //    .ForMember(des => des.CarOwner.ApplicationUser.PIN, opt => opt.MapFrom(src => src.PIN));
             CreateMap<EmergencyRequest, EmergencyRequestDetailsDTO>().
                 ForMember(des => des.RequestId, opt => opt.MapFrom(src => src.Id));
-
-
+            CreateMap<EmergencyRequest, EmergencyRequestDetailsDTO>()
+    .ForMember(dest => dest.RequestId, opt => opt.MapFrom(src => src.Id));
+            //CreateMap<IEnumerable<EmergencyRequest>, List<EmergencyRequestDetailsDTO>>().
+            //    ForMember(des => des.RequestId, opt => opt.MapFrom(src => src.Id));
         }
 
 

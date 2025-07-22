@@ -27,6 +27,15 @@ namespace RideFix.Controllers
 
             return Ok(ApiResponse<EmergencyRequestDetailsDTO>.SuccessResponse(request, "request details found"));
         }
+        [HttpGet("accepted/id")]
+        [HttpGet("accepted/{technicalId}")]
+        public async Task<ActionResult<EmergencyRequestDetailsDTO>> GetAllAcceptedRequests(int technicalId)
+        {
+            var request = await serviceManager.technicianRequestEmergency.GetAllAcceptedRequestsAsync(technicalId);
+            if (request == null)
+                return NotFound("request with id not found y s7by");
+            return Ok(request);
+        }
 
         [EndpointSummary("Get RequestsAssignedToTechnician by technicianId if it's waiting state")]
         [HttpGet("{technicianId}")]
@@ -36,6 +45,7 @@ namespace RideFix.Controllers
              to do:
             validate if technicianId found or not 
              */
+
             var request = await serviceManager.technicianRequestEmergency.GetAllRequestsAssignedToTechnicianAsync(technicianId);
             if (request == null)
                 return NotFound(ApiResponse<string>.FailResponse("technician doesn't have requests"));
