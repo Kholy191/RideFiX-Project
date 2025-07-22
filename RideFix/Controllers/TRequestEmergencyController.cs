@@ -14,7 +14,7 @@ namespace RideFix.Controllers
         {
             serviceManager = _iServiceManager;
         }
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<ActionResult<EmergencyRequestDetailsDTO>> GetDetailsAsync(int id)
         {
             var request = await serviceManager.technicianRequestEmergency.GetRequestDetailsByIdAsync(id);
@@ -22,7 +22,7 @@ namespace RideFix.Controllers
                 return NotFound("request with id not found y s7by");
             return Ok(request);
         }
-     
+        [HttpGet("accepted/id")]
         [HttpGet("accepted/{technicalId}")]
         public async Task<ActionResult<EmergencyRequestDetailsDTO>> GetAllAcceptedRequests(int technicalId)
         {
