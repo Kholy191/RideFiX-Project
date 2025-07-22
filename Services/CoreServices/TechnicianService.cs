@@ -6,6 +6,7 @@ using Service.Specification_Implementation;
 using ServiceAbstraction.CoreServicesAbstractions;
 using SharedData.DTOs.RequestsDTOs;
 using SharedData.DTOs.TechnicianDTOs;
+using SharedData.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace Service.CoreServices
 
         public async Task<string> GetCity(double latitude, double longitude)
         {
-            string url = $"https://nominatim.openstreetmap.org/reverse?format=json&lat={latitude}&lon={longitude}&zoom=10&addressdetails=1";
+            string url = $"https://nominatim.openstreetmap.org/reverse?format=json&lat={latitude}&lon={longitude}&zoom=10&addressdetails=1&accept-language=ar";
 
             using (HttpClient client = new HttpClient())
             {
@@ -59,8 +60,11 @@ namespace Service.CoreServices
             {
                 throw new ArgumentException("لم يتم العثور على المدينة بناءً على الإحداثيات المقدمة.");
             }
+            if (!Enum.TryParse<Government>(city, ignoreCase: true, out var parsedGovernment))
+                throw new ArgumentException($"القيمة '{city}' غير متوافقة مع GovernmentEnum.");
 
-            var spec = new TechniciansSpecification(currentTime, city, request.categoryId);
+
+            var spec = new TechniciansSpecification(currentTime, parsedGovernment, request.categoryId);
 
             var filteredTechnicians = await unitOfWork.GetRepository<Technician, int>()
                 .GetAllAsync(spec);

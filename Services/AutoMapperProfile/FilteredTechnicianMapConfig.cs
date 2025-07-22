@@ -13,15 +13,13 @@ namespace Service.AutoMapperProfile
     {
         public FilteredTechnicianMapConfig()
         {
-            CreateMap< FilteredTechniciansDTO , Technician>()
-                .AfterMap((src, dest) => {
-                    src.StartWorking = dest.StartWorking.ToString();
-                    src.EndWorking = dest.EndWorking.ToString();
-                    src.FaceImageURL = dest.ApplicationUser.FaceImageUrl;
-                    src.Name = dest.ApplicationUser.Name;
-                }).ReverseMap();
-
-
+            CreateMap<Technician, FilteredTechniciansDTO>()
+            .AfterMap((src, dest) => {
+                dest.StartWorking = src.StartWorking.ToString();
+                dest.EndWorking = src.EndWorking.ToString();
+                dest.FaceImageURL = src.ApplicationUser.FaceImageUrl;
+                dest.Name = src.ApplicationUser.Name;
+            });
         }
     }
 }
