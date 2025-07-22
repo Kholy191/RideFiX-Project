@@ -12,6 +12,10 @@ namespace Services
 {
     public class ServiceManager(IMapper mapper, IUnitOfWork unitOfWork) : IServiceManager
     {
-        ITechnicianService IServiceManager.technicianService { get; } 
+
+        public IRequestServices requestServices { get; } 
+
+        public ITechnicianService technicianService { get; } 
+
     }
 }

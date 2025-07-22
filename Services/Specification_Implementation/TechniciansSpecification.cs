@@ -20,6 +20,7 @@ namespace Service.Specification_Implementation
             && t.TCategories.Any(c => categoryId == c.Id))
         {
             AddInclude(t => t.TCategories);
+            AddInclude(t => t.ApplicationUser);
 
         }
     }

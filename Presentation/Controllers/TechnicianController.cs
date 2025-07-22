@@ -23,8 +23,12 @@ namespace Presentation.Controllers
         [HttpPost]
         public  async Task<IActionResult> GetFilteredTechnicians([FromBody] CreatePreRequestDTO request)
         {
-           var result = await serviceManager.technicianService.GetTechniciansByFilterAsync(request);
-            return Ok(result);
+           var result = await serviceManager.requestServices.CreateRequestAsync(request);
+            if (result == null || result.Technicians == null || !result.Technicians.Any())
+            {
+                return NotFound("No technicians found matching the criteria.");
+            }
+            return Ok(result.Technicians);
         }
 
     }

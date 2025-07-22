@@ -14,8 +14,14 @@ namespace Service.AutoMapperProfile
         public PreRequestMapConfig()
         {
             CreateMap<CreatePreRequestDTO, EmergencyRequest>()
-                .ForMember(des => des.CarOwner.ApplicationUser.PIN, opt => opt.MapFrom(src => src.PIN));
-        
+            .AfterMap((src, dest) =>
+            {
+                if (dest.CarOwner?.ApplicationUser != null)
+                {
+                    dest.CarOwner.ApplicationUser.PIN = src.PIN;
+                }
+            });
+
         }
 
 
