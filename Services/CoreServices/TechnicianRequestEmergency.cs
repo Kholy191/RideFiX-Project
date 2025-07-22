@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
+using Domain.Entities.CoreEntites.EmergencyEntities;
 using ServiceAbstraction.CoreServicesAbstractions;
 using SharedData.DTOs.TechnicianEmergencyRequestDTOs;
 using System;
@@ -35,9 +36,10 @@ namespace Service.CoreServices.TechniciansServices
             throw new NotImplementedException();
         }
 
-        public Task<EmergencyRequestDetailsDTO> GetRequestDetailsByIdAsync(int id)
+        public async Task<EmergencyRequestDetailsDTO> GetRequestDetailsByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var request = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(id);
+            return mapper.Map<EmergencyRequestDetailsDTO>(request);
         }
 
         public Task<bool> UpdateRequestFromCarOwnerAsync(TechnicianUpdateEmergencyRequestDTO emergencyRequestDTO)
