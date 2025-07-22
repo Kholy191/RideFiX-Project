@@ -8,6 +8,7 @@ namespace SharedData.DTOs
 {
     public class ReviewDTO
     {
-        public int Rate { get; set; }
+        public double Rate { get; set; }
+        public int Count{ get; set; }
     }
 }

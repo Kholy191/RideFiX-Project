@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceAbstraction;
 using Shared.PaginatedModel;
 using SharedData.DTOs.RequestsDTOs;
+using SharedData.DTOs.TechnicianDTOs;
+using SharedData.DTOs.TechnicianEmergencyRequestDTOs;
+using SharedData.Wrapper;
 
 namespace Presentation.Controllers
 {
@@ -28,7 +31,8 @@ namespace Presentation.Controllers
             {
                 return NotFound("No technicians found matching the criteria.");
             }
-            return Ok(result.Technicians);
+            return Ok(ApiResponse<List<FilteredTechniciansDTO>>.SuccessResponse(result.Technicians, "There is Techs"));
+            //return Ok(result.Technicians);
         }
 
     }
