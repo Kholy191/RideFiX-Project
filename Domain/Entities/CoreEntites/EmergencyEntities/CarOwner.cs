@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
-  public  class CarOwner : BaseEntity<int>
+  public  class CarOwner : BaseEntity<string>
     {
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; } 

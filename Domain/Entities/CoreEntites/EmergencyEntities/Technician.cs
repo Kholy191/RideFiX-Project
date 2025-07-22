@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
-   public class Technician : BaseEntity<int>
+   public class Technician : BaseEntity<string>
     {
         public TimeOnly StartWorking { get; set; }
         public TimeOnly EndWorking { get; set; }

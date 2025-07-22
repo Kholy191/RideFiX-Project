@@ -1,5 +1,11 @@
 
+using System.Text;
+using Domain.Entities.IdentityEntities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using Presistence;
+using Presistence.Data;
 using Services;
 
 namespace RideFix
@@ -21,6 +27,30 @@ namespace RideFix
             builder.Services.AddPresistenceConfig(builder.Configuration); // Custom extension method to add persistence layer configurations
             builder.Services.AddServiceConfig();// Custom extension method to add service layer configurations
             #endregion
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                            .AddEntityFrameworkStores<ApplicationDbContext>()
+                            .AddDefaultTokenProviders();
+
+            ; builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                            {
+                                var config = builder.Configuration;
+                                options.TokenValidationParameters = new TokenValidationParameters
+                                {
+                                    ValidateIssuer = true,
+                                    ValidateAudience = true,
+                                    ValidateLifetime = true,
+                                    ValidateIssuerSigningKey = true,
+                                    ValidIssuer = config["JWT:Issuer"],
+                                    ValidAudience = config["JWT:Audience"],
+                                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT:Key"]))
+                                };
+                            });
+
 
             var app = builder.Build();
 

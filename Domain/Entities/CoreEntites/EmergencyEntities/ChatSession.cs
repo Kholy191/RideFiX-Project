@@ -15,10 +15,10 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         public ICollection<Message> massages { get; set; } = new List<Message>();
 
         [ForeignKey("CarOwner")]
-        public int CarOwnerId { get; set; }
+        public string CarOwnerId { get; set; }
         public CarOwner CarOwner { get; set; }
         [ForeignKey("Technician")]
-        public int TechnicianId { get; set; }
+        public string TechnicianId { get; set; }
         public Technician Technician { get; set; }
     }
 }

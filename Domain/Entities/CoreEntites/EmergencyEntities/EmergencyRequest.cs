@@ -15,9 +15,9 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         public DateTime? EndTimeStamp { get; set; }
 
         //navigations
-        public int TechnicainId { get; set; }
+        public string TechnicainId { get; set; }
         public Technician Technician { get; set; }
-        public int CarOwnerId { get; set; }
+        public string CarOwnerId { get; set; }
         public CarOwner CarOwner { get; set; }
     }
 }

@@ -139,3 +139,44 @@
 //        }
 //    }
 //}
+
+
+
+
+
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Intrinsics.X86;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Domain.Contracts;
+using Domain.Entities.CoreEntites.EmergencyEntities;
+using Domain.Entities.IdentityEntities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Presistence.Data;
+
+namespace Presistence
+{
+    public class DataSeeding
+    {
+        public static async Task SeedRolesAsync(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            string[] roleNames = { "CarOwner", "Technician", "Admin" };
+            foreach (var role in roleNames)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+        }
+    }
+}
