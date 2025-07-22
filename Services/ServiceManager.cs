@@ -16,14 +16,17 @@ namespace Services
         public IRequestServices requestServices { get; }
         public ITechnicianService technicianService { get; }
 
-        public ServiceManager(IRequestServices requestServices, ITechnicianService technicianService)
+        public ITechnicianRequestEmergency technicianRequestEmergency { get; }
+
+
+        public ServiceManager(IRequestServices requestServices, ITechnicianService technicianService, ITechnicianRequestEmergency _tech)
         {
             this.requestServices = requestServices;
             this.technicianService = technicianService;
+            this.technicianRequestEmergency = _tech;
         }
 
-        Lazy<ITechnicianRequestEmergency> _technicianRequestEmergency = new Lazy<ITechnicianRequestEmergency>(() => new TechnicianRequestEmergency(unitOfWork, mapper));
-        public ITechnicianRequestEmergency technicianRequestEmergency => _technicianRequestEmergency.Value;
+
 
     }
 }

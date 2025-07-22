@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Service.CoreServices.TechniciansServices
 {
-    internal class TechnicianRequestEmergency : ITechnicianRequestEmergency
+    public class TechnicianRequestEmergency : ITechnicianRequestEmergency
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
