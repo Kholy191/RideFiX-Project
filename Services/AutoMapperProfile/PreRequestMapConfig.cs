@@ -14,6 +14,17 @@ namespace Service.AutoMapperProfile
     {
         public PreRequestMapConfig()
         {
+
+            CreateMap<CreatePreRequestDTO, EmergencyRequest>()
+            .AfterMap((src, dest) =>
+            {
+                if (dest.CarOwner?.ApplicationUser != null)
+                {
+                    dest.CarOwner.ApplicationUser.PIN = src.PIN;
+                }
+            }).ReverseMap();
+
+
             //CreateMap<CreatePreRequestDTO, EmergencyRequest>()
             //    .ForMember(des => des.CarOwner.ApplicationUser.PIN, opt => opt.MapFrom(src => src.PIN));
             CreateMap<EmergencyRequest, EmergencyRequestDetailsDTO>().
@@ -22,6 +33,7 @@ namespace Service.AutoMapperProfile
     .ForMember(dest => dest.RequestId, opt => opt.MapFrom(src => src.Id));
             //CreateMap<IEnumerable<EmergencyRequest>, List<EmergencyRequestDetailsDTO>>().
             //    ForMember(des => des.RequestId, opt => opt.MapFrom(src => src.Id));
+
         }
 
 
