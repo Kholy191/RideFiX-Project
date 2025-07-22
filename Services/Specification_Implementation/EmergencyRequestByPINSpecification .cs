@@ -12,7 +12,9 @@ namespace Service.Specification_Implementation
 {
     public class EmergencyRequestByPINSpecification : Specification<EmergencyRequest, int>
     {
-        public EmergencyRequestByPINSpecification(CreatePreRequestDTO request) : base(r => r.CarOwner.ApplicationUser.PIN == request.PIN)
+        public EmergencyRequestByPINSpecification(CreatePreRequestDTO request) 
+            : base(r => r.CarOwner.ApplicationUser.PIN == request.PIN
+                    && r.CarOwnerId == request.CarOwnerId)
         {
             AddInclude(r => r.CarOwner);
             AddInclude(r => r.CarOwner.ApplicationUser);

@@ -10,12 +10,16 @@ using ServiceAbstraction.CoreServicesAbstractions;
 
 namespace Services
 {
-    public class ServiceManager(IMapper mapper, IUnitOfWork unitOfWork) : IServiceManager
+    public class ServiceManager : IServiceManager
     {
+        public IRequestServices requestServices { get; }
+        public ITechnicianService technicianService { get; }
 
-        public IRequestServices requestServices { get; } 
-
-        public ITechnicianService technicianService { get; } 
+        public ServiceManager(IRequestServices requestServices, ITechnicianService technicianService)
+        {
+            this.requestServices = requestServices;
+            this.technicianService = technicianService;
+        }
 
     }
 }

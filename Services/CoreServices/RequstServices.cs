@@ -27,7 +27,10 @@ namespace Service.CoreServices
         }
         public async Task<PreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request)
         {
-            var user = await unitOfWork.GetRepository<CarOwner, int>().GetByIdAsync(request.CarOwnerId);
+            
+            var spec = new EmergencyRequestByPINSpecification(request);
+            var user = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(spec);
+
             if (user == null)
             {
                 throw new ArgumentException("Car Owner not found");
