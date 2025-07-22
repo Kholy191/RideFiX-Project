@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ServiceAbstraction.CoreServicesAbstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace ServiceAbstraction
 {
     public interface IServiceManager
     {
+        ITechnicianService technicianService { get; }
     }
 }
