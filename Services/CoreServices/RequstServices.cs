@@ -35,7 +35,7 @@ namespace Service.CoreServices
             {
                 throw new ArgumentException("Car Owner not found");
             }
-            else if (user.ApplicationUser.PIN != request.PIN)
+            else if (user.CarOwner.ApplicationUser.PIN != request.PIN)
             {
                 throw new ArgumentException("Invalid PIN provided for the Car Owner");
             }
