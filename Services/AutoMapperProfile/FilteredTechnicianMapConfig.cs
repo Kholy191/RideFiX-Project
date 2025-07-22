@@ -17,6 +17,8 @@ namespace Service.AutoMapperProfile
                 .AfterMap((src, dest) => {
                     src.StartWorking = dest.StartWorking.ToString();
                     src.EndWorking = dest.EndWorking.ToString();
+                    src.FaceImageURL = dest.ApplicationUser.FaceImageUrl;
+                    src.Name = dest.ApplicationUser.Name;
                 }).ReverseMap();
 
 

@@ -8,6 +8,8 @@ namespace SharedData.DTOs.TechnicianDTOs
 {
     public class FilteredTechniciansDTO
     {
+        public string Name { get; set; }
+        public string FaceImageURL { get; set; }
         public string StartWorking { get; set; }
         public string EndWorking { get; set; }
         public string Description { get; set; }

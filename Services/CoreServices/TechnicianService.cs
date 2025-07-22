@@ -37,7 +37,7 @@ namespace Service.CoreServices
 
             using (HttpClient client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("User-Agent", "YourAppName"); // لازم تضيف Header
+                client.DefaultRequestHeaders.Add("User-Agent", "RideFix/1.0 (basmazain102000@gmail.com)"); // لازم تضيف Header
                 var response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {

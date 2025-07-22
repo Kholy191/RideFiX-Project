@@ -28,14 +28,14 @@ namespace Service.CoreServices
         public async Task<PreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request)
         {
             
-            var spec = new EmergencyRequestByPINSpecification(request);
-            var user = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(spec);
+            var spec = new CarOwnerSpecification(request);
+            var user = await unitOfWork.GetRepository<CarOwner, int>().GetByIdAsync(spec);
 
             if (user == null)
             {
                 throw new ArgumentException("Car Owner not found");
             }
-            else if (user.CarOwner.ApplicationUser.PIN != request.PIN)
+            else if (user.ApplicationUser.PIN!= request.PIN)
             {
                 throw new ArgumentException("Invalid PIN provided for the Car Owner");
             }
