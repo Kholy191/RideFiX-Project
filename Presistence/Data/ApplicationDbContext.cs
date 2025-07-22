@@ -18,7 +18,7 @@ namespace Presistence.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssemblyRefference).Assembly);
         }
-
+      
         public DbSet<Technician> technicians { get; set; }
         public DbSet<CarOwner> carOwners { get; set; }
         public DbSet<TCategory> categories { get; set; }

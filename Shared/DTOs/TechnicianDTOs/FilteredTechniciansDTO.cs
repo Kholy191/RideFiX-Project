@@ -8,8 +8,10 @@ namespace SharedData.DTOs.TechnicianDTOs
 {
     public class FilteredTechniciansDTO
     {
-        public TimeOnly StartWorking { get; set; }
-        public TimeOnly EndWorking { get; set; }
+        public string Name { get; set; }
+        public string FaceImageURL { get; set; }
+        public string StartWorking { get; set; }
+        public string EndWorking { get; set; }
         public string Description { get; set; }
         public ICollection<TCategoryDTO> TCategories { get; set; } = new List<TCategoryDTO>();
         public ICollection<ReviewDTO> reviews { get; set; } = new List<ReviewDTO>();
