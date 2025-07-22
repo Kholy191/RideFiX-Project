@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities.CoreEntites.EmergencyEntities;
+using Service.Specification_Implementation;
 using ServiceAbstraction.CoreServicesAbstractions;
 using SharedData.DTOs.TechnicianEmergencyRequestDTOs;
+using SharedData.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,9 +38,15 @@ namespace Service.CoreServices.TechniciansServices
             throw new NotImplementedException();
         }
 
-        public Task<List<EmergencyRequestDetailsDTO>> GetAllRequestsAssignedToTechnicianAsync(int technicianId)
+        public async Task<List<EmergencyRequestDetailsDTO>> GetAllRequestsAssignedToTechnicianAsync(int technicianId)
         {
-            throw new NotImplementedException();
+            var spec = new RequestsAssignedToTechnicianSpecification(technicianId, RequestState.Waiting);
+
+            var requests = await unitOfWork
+                .GetRepository<EmergencyRequest, int>()
+                .GetAllAsync(spec);
+
+            return mapper.Map<List<EmergencyRequestDetailsDTO>>(requests);
         }
 
         public async Task<EmergencyRequestDetailsDTO> GetRequestDetailsByIdAsync(int id)
