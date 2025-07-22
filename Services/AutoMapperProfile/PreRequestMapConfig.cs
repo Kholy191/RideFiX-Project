@@ -20,7 +20,7 @@ namespace Service.AutoMapperProfile
                 {
                     dest.CarOwner.ApplicationUser.PIN = src.PIN;
                 }
-            });
+            }).ReverseMap();
 
         }
 
