@@ -33,6 +33,10 @@ namespace RideFix.CustomMiddlewares
                     _logger.LogError(ex, "Not Found Exception: {Message}", ex.Message);
                     context.Response.StatusCode = StatusCodes.Status404NotFound;
                     break;
+                case Domain.Exceptions.BadRequestException badRequestException:
+                    _logger.LogError(ex, "BadRequest Exception: {Message}", ex.Message);
+                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    break;
                 default:
                     _logger.LogError(ex, "An unexpected error occurred: {Message}", ex.Message);
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;

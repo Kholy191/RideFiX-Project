@@ -1,15 +1,18 @@
-﻿using AutoMapper;
-using Domain.Contracts;
-using Domain.Entities.CoreEntites.EmergencyEntities;
-using Service.Specification_Implementation;
-using ServiceAbstraction.CoreServicesAbstractions;
-using SharedData.DTOs.RequestsDTOs;
-using SharedData.DTOs.TechnicianDTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Domain.Contracts;
+using Domain.Entities.CoreEntites.EmergencyEntities;
+using Service.Exception_Implementation;
+using Service.Exception_Implementation.BadRequestExceptions;
+using Service.Exception_Implementation.NotFoundExceptions;
+using Service.Specification_Implementation;
+using ServiceAbstraction.CoreServicesAbstractions;
+using SharedData.DTOs.RequestsDTOs;
+using SharedData.DTOs.TechnicianDTOs;
 
 namespace Service.CoreServices
 {
@@ -33,11 +36,11 @@ namespace Service.CoreServices
 
             if (user == null)
             {
-                throw new ArgumentException("Car Owner not found");
+                throw new CarOwnerNotFoundException();
             }
-            else if (user.ApplicationUser.PIN!= request.PIN)
+            else if (user.ApplicationUser.PIN != request.PIN)
             {
-                throw new ArgumentException("Invalid PIN provided for the Car Owner");
+                throw new PinCodeBadRequestException();
             }
             var filteredTechnicians = await technicianService.GetTechniciansByFilterAsync(request);
             if (filteredTechnicians == null || !filteredTechnicians.Any())

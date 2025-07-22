@@ -13,12 +13,10 @@ namespace Service.Specification_Implementation
     public class CarOwnerSpecification : Specification<CarOwner, int>
     {
         public CarOwnerSpecification(CreatePreRequestDTO request)
-            : base(co => co.ApplicationUser.PIN == request.PIN
-            && co.Id == request.CarOwnerId)
+            : base(co => co.Id == request.CarOwnerId)
         {
             AddInclude(co => co.ApplicationUser);
-           
         }
     }
-    
+
 }

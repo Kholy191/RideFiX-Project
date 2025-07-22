@@ -2,6 +2,8 @@
 using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities.CoreEntites.EmergencyEntities;
+using Service.Exception_Implementation;
+using Service.Exception_Implementation.NotFoundExceptions;
 using Service.Specification_Implementation;
 using ServiceAbstraction.CoreServicesAbstractions;
 using SharedData.DTOs.RequestsDTOs;
@@ -29,7 +31,6 @@ namespace Service.CoreServices
             var AllTechnicians = await unitOfWork.GetRepository<Technician, int>().GetAllAsync();
             var mappedTechnicians = mapper.Map<IEnumerable<Technician>, IEnumerable<FilteredTechniciansDTO>>(AllTechnicians);
             return mappedTechnicians.ToList();
-
         }
 
         public async Task<string> GetCity(double latitude, double longitude)
@@ -38,17 +39,26 @@ namespace Service.CoreServices
 
             using (HttpClient client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("User-Agent", "RideFix/1.0 (basmazain102000@gmail.com)"); // لازم تضيف Header
-                var response = await client.GetAsync(url);
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    var result = await response.Content.ReadAsStringAsync();
-                    dynamic json = Newtonsoft.Json.JsonConvert.DeserializeObject(result);
+                    client.DefaultRequestHeaders.Add("User-Agent", "RideFix/1.0 (basmazain102000@gmail.com)"); // لازم تضيف Header
+                    var response = await client.GetAsync(url);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var result = await response.Content.ReadAsStringAsync();
 
-                    string governorate = json.address.state ?? "لم يتم العثور على المحافظة";
-                    return governorate;
+                        dynamic json = Newtonsoft.Json.JsonConvert.DeserializeObject(result);
+
+                        string governorate = json.address.state ?? "لم يتم العثور على المحافظة";
+                        return governorate;
+                    }
+                    return "فشل في الاتصال بالخدمة";
                 }
-                return "فشل في الاتصال بالخدمة";
+                catch (Exception ex)
+                {
+                    // هنا ممكن تطبع الـ ex.Message لو حابب
+                    return "حدث خطأ أثناء جلب الموقع";
+                }
             }
         }
 
@@ -70,8 +80,10 @@ namespace Service.CoreServices
                 .GetAllAsync(spec);
 
             var mappedTechnicians = mapper.Map<IEnumerable<Technician>, IEnumerable<FilteredTechniciansDTO>>(filteredTechnicians).ToList();
-            return mappedTechnicians;
-
+            if (mappedTechnicians.Count != 0)
+                return mappedTechnicians;
+            else
+                throw new TechnicianNotFountException();
         }
 
     }
