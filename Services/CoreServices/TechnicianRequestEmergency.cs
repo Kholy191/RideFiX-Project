@@ -36,6 +36,11 @@ namespace Service.CoreServices.TechniciansServices
             throw new NotImplementedException();
         }
 
+        public Task<List<EmergencyRequestDetailsDTO>> GetAllRequestsAssignedToTechnicianAsync(int technicianId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<EmergencyRequestDetailsDTO> GetRequestDetailsByIdAsync(int id)
         {
             var request = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(id);
