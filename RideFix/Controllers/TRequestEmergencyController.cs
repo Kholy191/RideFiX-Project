@@ -45,6 +45,7 @@ namespace RideFix.Controllers
              to do:
             validate if technicianId found or not 
              */
+
             var request = await serviceManager.technicianRequestEmergency.GetAllRequestsAssignedToTechnicianAsync(technicianId);
             if (request == null)
                 return NotFound(ApiResponse<string>.FailResponse("technician doesn't have requests"));
