@@ -41,6 +41,17 @@ namespace Service.CoreServices.TechniciansServices
             throw new NotImplementedException();
         }
 
+        public async Task<List<EmergencyRequestDetailsDTO>> GetAllRequestsAssignedToTechnicianAsync(int technicianId)
+        {
+            var spec = new RequestsAssignedToTechnicianSpecification(technicianId, RequestState.Waiting);
+
+            var requests = await unitOfWork
+                .GetRepository<EmergencyRequest, int>()
+                .GetAllAsync(spec);
+
+            return mapper.Map<List<EmergencyRequestDetailsDTO>>(requests);
+        }
+
         public async Task<EmergencyRequestDetailsDTO> GetRequestDetailsByIdAsync(int id)
         {
             var request = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(id);

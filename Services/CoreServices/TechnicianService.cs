@@ -25,10 +25,10 @@ namespace Service.CoreServices
         }
         public async Task<List<FilteredTechniciansDTO>> GetAllTechnicians()
         {
-            //var AllTechnicians = await unitOfWork.GetRepository<Technician, int>().GetAllAsync();
-            //var mappedTechnicians = mapper.Map<IEnumerable<Technician>, IEnumerable<FilteredTechniciansDTO>>(AllTechnicians);
-            //return mappedTechnicians.ToList();
-            throw new NotImplementedException();
+            var AllTechnicians = await unitOfWork.GetRepository<Technician, int>().GetAllAsync();
+            var mappedTechnicians = mapper.Map<IEnumerable<Technician>, IEnumerable<FilteredTechniciansDTO>>(AllTechnicians);
+            return mappedTechnicians.ToList();
+
 
         }
 
