@@ -29,6 +29,7 @@ namespace Service.CoreServices
             var mappedTechnicians = mapper.Map<IEnumerable<Technician>, IEnumerable<FilteredTechniciansDTO>>(AllTechnicians);
             return mappedTechnicians.ToList();
 
+
         }
 
         public async Task<string> GetCity(double latitude, double longitude)
