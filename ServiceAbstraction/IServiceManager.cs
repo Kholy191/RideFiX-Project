@@ -11,5 +11,7 @@ namespace ServiceAbstraction
     {
         ITechnicianService technicianService { get; }
         IRequestServices requestServices { get; }
+        ITechnicianRequestEmergency technicianRequestEmergency { get; }
+
     }
 }

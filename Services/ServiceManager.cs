@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Contracts;
+using Service.CoreServices.TechniciansServices;
 using ServiceAbstraction;
 using ServiceAbstraction.CoreServicesAbstractions;
 
@@ -20,6 +21,9 @@ namespace Services
             this.requestServices = requestServices;
             this.technicianService = technicianService;
         }
+
+        Lazy<ITechnicianRequestEmergency> _technicianRequestEmergency = new Lazy<ITechnicianRequestEmergency>(() => new TechnicianRequestEmergency(unitOfWork, mapper));
+        public ITechnicianRequestEmergency technicianRequestEmergency => _technicianRequestEmergency.Value;
 
     }
 }

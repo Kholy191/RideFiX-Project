@@ -14,11 +14,13 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         public bool IsCompleted { get; set; }
         public DateTime TimeStamp { get; set; }
         public DateTime? EndTimeStamp { get; set; }
+
         public string Description { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         [ForeignKey("category")]
         public int categoryId { get; set; }
+
 
         //navigations
         public int TechnicainId { get; set; }
