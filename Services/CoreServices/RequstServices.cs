@@ -30,6 +30,10 @@ namespace Service.CoreServices
             this.technicianService = technicianService;
         }
 
+        public Task CancelAll(int id)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task CreateRealRequest(RealRequestDTO request)
         {
