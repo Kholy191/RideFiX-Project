@@ -11,5 +11,7 @@ namespace ServiceAbstraction.CoreServicesAbstractions
     public interface IRequestServices
     {
         public Task<PreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request);
+        public Task CreateRealRequest(RealRequestDTO request);
+        
     }
 }
