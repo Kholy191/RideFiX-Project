@@ -38,7 +38,7 @@ namespace Presistence.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("carOwners");
+                    b.ToTable("carOwners", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.ChatSession", b =>
@@ -70,13 +70,39 @@ namespace Presistence.Migrations
 
                     b.HasIndex("TechnicianId");
 
-                    b.ToTable("chatSessions");
+                    b.ToTable("chatSessions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.EmergencyRequest", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CallState")
+                        .HasMaxLength(50)
+                        .HasColumnType("int");
+
                     b.Property<int>("CarOwnerId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndTimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<int>("TechnicainId")
                         .HasColumnType("int");
@@ -84,25 +110,18 @@ namespace Presistence.Migrations
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CallState")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("EndTimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
+                    b.Property<int>("categoryId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
+                    b.HasKey("Id");
 
-                    b.HasKey("CarOwnerId", "TechnicainId", "TimeStamp");
+                    b.HasIndex("CarOwnerId");
 
                     b.HasIndex("TechnicainId");
 
-                    b.ToTable("emergencyRequests");
+                    b.HasIndex("categoryId");
+
+                    b.ToTable("emergencyRequests", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Message", b =>
@@ -137,7 +156,36 @@ namespace Presistence.Migrations
 
                     b.HasIndex("ChatSessionId");
 
-                    b.ToTable("messages");
+                    b.ToTable("messages", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.MessageAttachment", b =>
+                {
+                    b.Property<int>("MessageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AttachmentUrl")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("MessageId", "AttachmentUrl");
+
+                    b.HasIndex("MessageId")
+                        .IsUnique();
+
+                    b.ToTable("MessageAttachment", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.RequestAttachment", b =>
+                {
+                    b.Property<int>("EmergencyRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AttachmentUrl")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("EmergencyRequestId", "AttachmentUrl");
+
+                    b.ToTable("RequestAttachment", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Review", b =>
@@ -159,9 +207,8 @@ namespace Presistence.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Rate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Rate")
+                        .HasColumnType("int");
 
                     b.Property<int>("TechnicianId")
                         .HasColumnType("int");
@@ -172,7 +219,7 @@ namespace Presistence.Migrations
 
                     b.HasIndex("TechnicianId");
 
-                    b.ToTable("reviews");
+                    b.ToTable("reviews", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.TCategory", b =>
@@ -190,7 +237,7 @@ namespace Presistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("categories");
+                    b.ToTable("categories", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Technician", b =>
@@ -215,11 +262,14 @@ namespace Presistence.Migrations
                     b.Property<TimeOnly>("StartWorking")
                         .HasColumnType("time");
 
+                    b.Property<int>("government")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("technicians");
+                    b.ToTable("technicians", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.IdentityEntities.ApplicationUser", b =>
@@ -506,9 +556,17 @@ namespace Presistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.TCategory", "category")
+                        .WithMany("EmergencyRequests")
+                        .HasForeignKey("categoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("CarOwner");
 
                     b.Navigation("Technician");
+
+                    b.Navigation("category");
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Message", b =>
@@ -528,6 +586,28 @@ namespace Presistence.Migrations
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("ChatSession");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.MessageAttachment", b =>
+                {
+                    b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.Message", "Message")
+                        .WithOne("MessageAttachment")
+                        .HasForeignKey("Domain.Entities.CoreEntites.EmergencyEntities.MessageAttachment", "MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Message");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.RequestAttachment", b =>
+                {
+                    b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.EmergencyRequest", "EmergencyRequest")
+                        .WithMany("requestAttachments")
+                        .HasForeignKey("EmergencyRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EmergencyRequest");
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Review", b =>
@@ -638,6 +718,21 @@ namespace Presistence.Migrations
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.ChatSession", b =>
                 {
                     b.Navigation("massages");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.EmergencyRequest", b =>
+                {
+                    b.Navigation("requestAttachments");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Message", b =>
+                {
+                    b.Navigation("MessageAttachment");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.TCategory", b =>
+                {
+                    b.Navigation("EmergencyRequests");
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Technician", b =>

@@ -13,8 +13,6 @@ namespace Presistence.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<EmergencyRequest> builder)
         {
-            builder.HasKey(e => new { e.CarOwnerId, e.TechnicainId, e.TimeStamp });
-
 
             builder.Property(er => er.CallState)
               .IsRequired()

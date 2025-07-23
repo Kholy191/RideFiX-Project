@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
-  public  class CarOwner : BaseEntity<string>
+  public  class CarOwner : BaseEntity<int>
     {
+     
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; } 
         public ICollection<ChatSession> ChatSessions { get; set; } = new List<ChatSession>();

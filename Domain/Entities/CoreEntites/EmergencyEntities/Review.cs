@@ -9,17 +9,17 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
    public class Review : BaseEntity<int>
     {
-        public string Rate { get; set; }
+        public int Rate { get; set; }
         public string Comment { get; set; }
         public DateTime DateTime { get; set; }
 
         [ForeignKey ("CarOwner")]
-        public string CarOwnerId { get; set; }
+        public int CarOwnerId { get; set; }
         public CarOwner CarOwner { get; set; }
 
 
         [ForeignKey("Technician")]
-        public string TechnicianId { get; set; }
+        public int TechnicianId { get; set; }
         public Technician Technician { get; set; }
     }
 }

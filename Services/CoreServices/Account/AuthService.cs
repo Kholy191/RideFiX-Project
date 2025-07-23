@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using ServiceAbstraction.CoreServicesAbstractions.Account;
 using SharedData.DTOs.Account;
+using SharedData.Enums;
 
 namespace Service.CoreServices.Account
 {
@@ -146,16 +147,21 @@ namespace Service.CoreServices.Account
             var result = await _userManager.CreateAsync(user , step1Dto.Password);
             if (!result.Succeeded) return result;
 
-            await _userManager.AddToRoleAsync(user, step1Dto.Role);
 
             if (step1Dto.Role == "CarOwner") {
+                await _userManager.AddToRoleAsync(user, Roles.CarOwner);
+
                 var carowner = new CarOwner() {ApplicationUserId = user.Id };
+                Console.WriteLine($"CarOwner Id before insert: {carowner.Id}");
+
                 // add in database
-                await _unitOfWork.GetRepository<CarOwner, string>().AddAsync(carowner);
+                await _unitOfWork.GetRepository<CarOwner, int>().AddAsync(carowner);
 
             }
             else if (step1Dto.Role == "Technician")
             {
+                await _userManager.AddToRoleAsync(user, Roles.Technician);
+
                 var tech = new Technician
                 {
                     ApplicationUserId = user.Id,
@@ -164,7 +170,7 @@ namespace Service.CoreServices.Account
                     Description = step1Dto.Description
                 };
                 //add in database
-                await _unitOfWork.GetRepository<Technician, string>().AddAsync(tech);
+                await _unitOfWork.GetRepository<Technician, int>().AddAsync(tech);
 
 
             }
