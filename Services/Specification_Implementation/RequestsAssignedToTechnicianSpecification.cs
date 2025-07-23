@@ -1,12 +1,6 @@
-﻿using Domain.Contracts.SpecificationContracts;
-using Domain.Entities.CoreEntites.EmergencyEntities;
+﻿using Domain.Entities.CoreEntites.EmergencyEntities;
 using Services.Specification_Implementation;
 using SharedData.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Specification_Implementation
 {
@@ -15,6 +9,11 @@ namespace Service.Specification_Implementation
         public RequestsAssignedToTechnicianSpecification(int technicianId, RequestState requestState) : base(req =>
                  req.TechnicainId == technicianId && req.CallState == requestState)
         {
+            AddInclude(req => req.CarOwner);
+            AddInclude(req => req.Technician);
+           
+
+            
         }
     }
 }
