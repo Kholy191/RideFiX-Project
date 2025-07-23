@@ -60,8 +60,7 @@ namespace RideFix
 
             #region Services Configurations
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                    .AddEntityFrameworkStores<ApplicationDbContext>(); // Configuring Identity with Entity Framework Store
+    
 
             builder.Services.AddPresistenceConfig(builder.Configuration); // Custom extension method to add persistence layer configurations
             builder.Services.AddServiceConfig();// Custom extension method to add service layer configurations
