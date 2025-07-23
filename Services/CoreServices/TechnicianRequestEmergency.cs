@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Service.CoreServices.TechniciansServices
 {
-    internal class TechnicianRequestEmergency : ITechnicianRequestEmergency
+    public class TechnicianRequestEmergency : ITechnicianRequestEmergency
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
@@ -24,21 +24,35 @@ namespace Service.CoreServices.TechniciansServices
             mapper = _mapper;
         }
 
-        public Task<bool> ApplyRequestFromHomePage(TechnicianApplyEmergencyRequestDTO emergencyRequestDTO)
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task<bool> ApplyRequestFromHomePage(TechnicianApplyEmergencyRequestDTO emergencyRequestDTO)
+        //{
+        //    var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
+        //    EmergencyRequest requestToUpdate =await repo.GetByIdAsync(emergencyRequestDTO.RequestId);
+        //    if (requestToUpdate != null)
+        //    {
+        //        requestToUpdate.TechnicainId = emergencyRequestDTO.UserId;
+        //        requestToUpdate.s
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+
+        //}
 
         public async Task<List<EmergencyRequestDetailsDTO>> GetAllAcceptedRequestsAsync(int tecId)
         {
             var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
-            var allRequests = await repo.GetAllAsync(new EmergencyRequestSpecification(new RequestQueryData() { TechnicainId = tecId ,CallState=RequestState.Answered})) ;
+            var allRequests = await repo.GetAllAsync(new EmergencyRequestSpecification(new RequestQueryData() { TechnicainId = tecId, CallState = RequestState.Answered }));
             return mapper.Map<List<EmergencyRequestDetailsDTO>>(allRequests);
         }
 
-        public Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync()
+        public async Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync()
         {
-            throw new NotImplementedException();
+            var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
+            var allRequests = await repo.GetAllAsync(new EmergencyRequestSpecification(new RequestQueryData() { IsCompleted = false }));
+            return mapper.Map<List<EmergencyRequestDetailsDTO>>(allRequests);
+
         }
 
         public async Task<List<EmergencyRequestDetailsDTO>> GetAllRequestsAssignedToTechnicianAsync(int technicianId)

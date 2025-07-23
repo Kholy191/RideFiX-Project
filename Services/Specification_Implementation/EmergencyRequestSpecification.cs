@@ -13,8 +13,11 @@ namespace Service.Specification_Implementation
     public class EmergencyRequestSpecification : Specification<EmergencyRequest, int>
     {
         public EmergencyRequestSpecification(RequestQueryData requestQueryData)
-            : base(r =>
-            (requestQueryData.CallState.HasValue || requestQueryData.TechnicainId.HasValue))
+           : base(r =>
+    (!requestQueryData.CallState.HasValue || r.CallState == requestQueryData.CallState) &&
+    (!requestQueryData.TechnicainId.HasValue || r.TechnicainId == requestQueryData.TechnicainId) &&
+    (!requestQueryData.IsCompleted.HasValue || r.IsCompleted == requestQueryData.IsCompleted)
+)
 
         {
             AddInclude(r => r.CarOwner);
