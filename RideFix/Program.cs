@@ -1,4 +1,17 @@
 
+using System.Text;
+using Domain.Entities.IdentityEntities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using Presistence;
+using Presistence.Data;
+using Domain.Contracts;
+using Domain.Entities.IdentityEntities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Presistence;
+using Presistence.Data;
 using Domain.Contracts;
 using Domain.Entities.IdentityEntities;
 using Microsoft.AspNetCore.Identity;
@@ -18,18 +31,51 @@ namespace RideFix
 
             // Add services to the container.
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader();
+                    });
+            });
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             #region Services Configurations
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                    .AddEntityFrameworkStores<ApplicationDbContext>(); // Configuring Identity with Entity Framework Store
-
             builder.Services.AddPresistenceConfig(builder.Configuration); // Custom extension method to add persistence layer configurations
             builder.Services.AddServiceConfig();// Custom extension method to add service layer configurations
             #endregion
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                            .AddEntityFrameworkStores<ApplicationDbContext>()
+                            .AddDefaultTokenProviders();
+
+            ; builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                            {
+                                var config = builder.Configuration;
+                                options.TokenValidationParameters = new TokenValidationParameters
+                                {
+                                    ValidateIssuer = true,
+                                    ValidateAudience = true,
+                                    ValidateLifetime = true,
+                                    ValidateIssuerSigningKey = true,
+                                    ValidIssuer = config["JWT:Issuer"],
+                                    ValidAudience = config["JWT:Audience"],
+                                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT:Key"]))
+                                };
+                            });
+
 
             #region Invalid Model State Response Factory Configuration
             builder.Services.Configure<ApiBehaviorOptions>(ApiBehaviorOptions =>
@@ -54,6 +100,8 @@ namespace RideFix
 
 
             var app = builder.Build();
+            app.UseCors("AllowAll");
+
 
             #region Exception Handler Middleware Configuration
             app.UseMiddleware<CustomExceptionMiddleware>();
@@ -69,6 +117,7 @@ namespace RideFix
             }
             #endregion
 
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -76,6 +125,7 @@ namespace RideFix
                 app.UseSwaggerUI();
             }
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

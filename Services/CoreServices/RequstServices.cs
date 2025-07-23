@@ -1,37 +1,83 @@
-﻿using AutoMapper;
-using Domain.Contracts;
-using Domain.Entities.CoreEntites.EmergencyEntities;
-using ServiceAbstraction.CoreServicesAbstractions;
-using SharedData.DTOs.RequestsDTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Domain.Contracts;
+using Domain.Entities.CoreEntites.EmergencyEntities;
+using Service.Exception_Implementation;
+using Service.Exception_Implementation.BadRequestExceptions;
+using Service.Exception_Implementation.NotFoundExceptions;
+using Service.Specification_Implementation;
+using ServiceAbstraction.CoreServicesAbstractions;
+using SharedData.DTOs.RequestsDTOs;
+using SharedData.DTOs.TechnicianDTOs;
+using SharedData.Enums;
 
 namespace Service.CoreServices
 {
     public class RequstServices : IRequestServices
     {
+        private readonly ITechnicianService technicianService;
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
-        public RequstServices(IUnitOfWork _unitOfWork, IMapper _mapper)
+        public RequstServices(IUnitOfWork _unitOfWork, IMapper _mapper, ITechnicianService technicianService)
         {
+
             unitOfWork = _unitOfWork;
             mapper = _mapper;
+            this.technicianService = technicianService;
         }
-        public async Task<CreatePreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request)
+
+
+        public async Task CreateRealRequest(RealRequestDTO request)
         {
-            var user = await unitOfWork.GetRepository<CarOwner, int>().GetByIdAsync(request.CarOwnerId);
+            var emergancyRequest = request.TechnicianIDs
+                .Select(technicianId => new EmergencyRequest
+                {
+                    CarOwnerId = request.CarOwnerId,
+                    TechnicainId = technicianId,
+                    Description = request.Description,
+                    Latitude = request.Latitude,
+                    Longitude = request.Longitude,             
+                    CallState = RequestState.Waiting,
+                    IsCompleted = false,
+                    TimeStamp = DateTime.UtcNow,
+                    EndTimeStamp = null,
+                    categoryId = request.categoryId
+                }).ToList();
+            foreach (var item in emergancyRequest)
+            {
+                await unitOfWork.GetRepository<EmergencyRequest, int>().AddAsync(item);
+            }
+            await unitOfWork.SaveChangesAsync();
+
+
+
+        }
+
+        public async Task<PreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request)
+        {
+            
+            var spec = new CarOwnerSpecification(request);
+            var user = await unitOfWork.GetRepository<CarOwner, int>().GetByIdAsync(spec);
+
             if (user == null)
             {
-                throw new ArgumentException("Car Owner not found");
+                throw new CarOwnerNotFoundException();
             }
             else if (user.ApplicationUser.PIN != request.PIN)
             {
-                throw new ArgumentException("Invalid PIN provided for the Car Owner");
+                throw new PinCodeBadRequestException();
             }
-            return request;
+            var filteredTechnicians = await technicianService.GetTechniciansByFilterAsync(request);
+            if (filteredTechnicians == null || !filteredTechnicians.Any())
+            {
+                return new PreRequestDTO { };
+            }
+            
+            return new PreRequestDTO { Technicians = filteredTechnicians };
 
         }
     }

@@ -6,11 +6,6 @@ using ServiceAbstraction.CoreServicesAbstractions;
 using SharedData.DTOs.TechnicianEmergencyRequestDTOs;
 using SharedData.Enums;
 using SharedData.QueryModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.CoreServices.TechniciansServices
 {
@@ -62,6 +57,9 @@ namespace Service.CoreServices.TechniciansServices
 
         public async Task<List<EmergencyRequestDetailsDTO>> GetAllRequestsAssignedToTechnicianAsync(int technicianId)
         {
+            var technician = await unitOfWork.GetRepository<Technician, int>().GetByIdAsync(technicianId);
+            if (technician == null)
+                return new List<EmergencyRequestDetailsDTO>();
             var spec = new RequestsAssignedToTechnicianSpecification(technicianId, RequestState.Waiting);
 
             var requests = await unitOfWork
@@ -77,9 +75,18 @@ namespace Service.CoreServices.TechniciansServices
             return mapper.Map<EmergencyRequestDetailsDTO>(request);
         }
 
-        public Task<bool> UpdateRequestFromCarOwnerAsync(TechnicianUpdateEmergencyRequestDTO emergencyRequestDTO)
+        public async Task<bool> UpdateRequestFromCarOwnerAsync(TechnicianUpdateEmergencyRequestDTO emergencyRequestDTO)
         {
-            throw new NotImplementedException();
+            var spec = new TechnicianUpdateRequestSpec(emergencyRequestDTO.RequestId, emergencyRequestDTO.TechnicianId);
+            var request = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(spec);
+            if (request == null) return false;
+            var technicianSpec = new TechnicianWithAppUserSpec(emergencyRequestDTO.TechnicianId, emergencyRequestDTO.Pin);
+            var technician = await unitOfWork.GetRepository<Technician, int>().GetByIdAsync(technicianSpec);
+            if (technician == null) return false;
+            request.CallState = emergencyRequestDTO.NewStatus;
+            request.IsCompleted = emergencyRequestDTO.IsCompleted;
+            await unitOfWork.SaveChangesAsync();
+            return true;
         }
     }
 }

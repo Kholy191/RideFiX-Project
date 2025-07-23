@@ -1,4 +1,5 @@
 ﻿using SharedData.DTOs.RequestsDTOs;
+using SharedData.DTOs.TechnicianDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace ServiceAbstraction.CoreServicesAbstractions
 {
     public interface IRequestServices
     {
-        public Task<CreatePreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request);
+        public Task<PreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request);
+        public Task CreateRealRequest(RealRequestDTO request);
+        
     }
 }
