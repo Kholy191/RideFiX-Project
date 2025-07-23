@@ -29,7 +29,9 @@ namespace Presistence
 
         public async Task SeedCategories()
         {
+
             var Res = await _context.categories.AnyAsync();
+
             if (!Res)
             {
                 var _categories = File.OpenRead(@"..\Presistence\Data\DataSeed\Category.json");

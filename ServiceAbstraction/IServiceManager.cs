@@ -9,9 +9,12 @@ namespace ServiceAbstraction
 {
     public interface IServiceManager
     {
+
         ITechnicianService technicianService { get; }
         IRequestServices requestServices { get; }
         ITechnicianRequestEmergency technicianRequestEmergency { get; }
+        ICategoryService categoryService { get; }
+
 
     }
 }

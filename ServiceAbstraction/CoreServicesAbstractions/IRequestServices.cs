@@ -12,5 +12,7 @@ namespace ServiceAbstraction.CoreServicesAbstractions
     {
         public Task<PreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request);
         public Task CancelAll(int id);
+        public Task CreateRealRequest(RealRequestDTO request);
+
     }
 }
