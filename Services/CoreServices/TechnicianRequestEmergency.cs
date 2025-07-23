@@ -19,10 +19,21 @@ namespace Service.CoreServices.TechniciansServices
             mapper = _mapper;
         }
 
-        public Task<bool> ApplyRequestFromHomePage(TechnicianApplyEmergencyRequestDTO emergencyRequestDTO)
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task<bool> ApplyRequestFromHomePage(TechnicianApplyEmergencyRequestDTO emergencyRequestDTO)
+        //{
+        //    var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
+        //    EmergencyRequest requestToUpdate =await repo.GetByIdAsync(emergencyRequestDTO.RequestId);
+        //    if (requestToUpdate != null)
+        //    {
+        //        requestToUpdate.TechnicainId = emergencyRequestDTO.UserId;
+        //        requestToUpdate.s
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+
+        //}
 
         public async Task<List<EmergencyRequestDetailsDTO>> GetAllAcceptedRequestsAsync(int tecId)
         {
@@ -31,9 +42,12 @@ namespace Service.CoreServices.TechniciansServices
             return mapper.Map<List<EmergencyRequestDetailsDTO>>(allRequests);
         }
 
-        public Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync()
+        public async Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync()
         {
-            throw new NotImplementedException();
+            var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
+            var allRequests = await repo.GetAllAsync(new EmergencyRequestSpecification(new RequestQueryData() { IsCompleted = false }));
+            return mapper.Map<List<EmergencyRequestDetailsDTO>>(allRequests);
+
         }
 
         public async Task<List<EmergencyRequestDetailsDTO>> GetAllRequestsAssignedToTechnicianAsync(int technicianId)
