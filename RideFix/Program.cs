@@ -16,6 +16,17 @@ namespace RideFix
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            ///
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularClient", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200") // Angular dev URL
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -68,6 +79,10 @@ namespace RideFix
                 await dataSeeding.SeedDataAsync();
             }
             #endregion
+
+            ///
+            app.UseCors("AllowAngularClient");
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
