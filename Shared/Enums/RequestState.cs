@@ -12,5 +12,6 @@ namespace SharedData.Enums
         Rejected = 2,
         Waiting = 3,
         Cancelled = 4
+
     }
 }
