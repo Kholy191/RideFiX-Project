@@ -8,7 +8,7 @@ using Domain.Contracts.SpecificationContracts;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Presistence.Data;
-using Services.Specification_Implementation;
+//using Service.Specification_Implementation;
 
 namespace Presistence.Repositories
 {

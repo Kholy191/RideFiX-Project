@@ -13,6 +13,7 @@ using Service.Specification_Implementation;
 using ServiceAbstraction.CoreServicesAbstractions;
 using SharedData.DTOs.RequestsDTOs;
 using SharedData.DTOs.TechnicianDTOs;
+using SharedData.Enums;
 
 namespace Service.CoreServices
 {
@@ -32,6 +33,34 @@ namespace Service.CoreServices
         public Task CancelAll(int id)
         {
             throw new NotImplementedException();
+        }
+
+
+
+        public async Task CreateRealRequest(RealRequestDTO request)
+        {
+            var emergancyRequest = request.TechnicianIDs
+                .Select(technicianId => new EmergencyRequest
+                {
+                    CarOwnerId = request.CarOwnerId,
+                    TechnicainId = technicianId,
+                    Description = request.Description,
+                    Latitude = request.Latitude,
+                    Longitude = request.Longitude,             
+                    CallState = RequestState.Waiting,
+                    IsCompleted = false,
+                    TimeStamp = DateTime.UtcNow,
+                    EndTimeStamp = null,
+                    categoryId = request.categoryId
+                }).ToList();
+            foreach (var item in emergancyRequest)
+            {
+                await unitOfWork.GetRepository<EmergencyRequest, int>().AddAsync(item);
+            }
+            await unitOfWork.SaveChangesAsync();
+
+
+
         }
 
         public async Task<PreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request)

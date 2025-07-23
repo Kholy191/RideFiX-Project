@@ -9,7 +9,8 @@ namespace Service.Specification_Implementation
         public RequestsAssignedToTechnicianSpecification(int technicianId, RequestState requestState) : base(req =>
                  req.TechnicainId == technicianId && req.CallState == requestState)
         {
-            AddInclude(req => req.CarOwner);
+           // AddInclude(req => req.CarOwner);
+            AddInclude(req => req.CarOwner.ApplicationUser);
             AddInclude(req => req.Technician);
            
 
