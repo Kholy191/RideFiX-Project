@@ -13,6 +13,7 @@ namespace ServiceAbstraction
         ITechnicianService technicianService { get; }
         IRequestServices requestServices { get; }
         ITechnicianRequestEmergency technicianRequestEmergency { get; }
+        ICategoryService categoryService { get; }
 
 
     }

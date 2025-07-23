@@ -80,7 +80,7 @@ namespace Service.CoreServices.TechniciansServices
             var spec = new TechnicianUpdateRequestSpec(emergencyRequestDTO.RequestId, emergencyRequestDTO.TechnicianId);
             var request = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(spec);
             if (request == null) return false;
-            var technicianSpec = new TechnicianWithAppUserSpec( emergencyRequestDTO.TechnicianId,emergencyRequestDTO.Pin);
+            var technicianSpec = new TechnicianWithAppUserSpec(emergencyRequestDTO.TechnicianId, emergencyRequestDTO.Pin);
             var technician = await unitOfWork.GetRepository<Technician, int>().GetByIdAsync(technicianSpec);
             if (technician == null) return false;
             request.CallState = emergencyRequestDTO.NewStatus;

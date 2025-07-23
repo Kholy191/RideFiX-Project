@@ -17,13 +17,18 @@ namespace Services
         public ITechnicianService technicianService { get; }
 
         public ITechnicianRequestEmergency technicianRequestEmergency { get; }
+        public ICategoryService categoryService { get; }
 
 
-        public ServiceManager(IRequestServices requestServices, ITechnicianService technicianService, ITechnicianRequestEmergency _tech)
+        public ServiceManager(IRequestServices requestServices,
+                    ITechnicianService technicianService, 
+                    ITechnicianRequestEmergency _tech,
+                    ICategoryService categoryService)
         {
             this.requestServices = requestServices;
             this.technicianService = technicianService;
             this.technicianRequestEmergency = _tech;
+            this.categoryService = categoryService;
         }
 
 
