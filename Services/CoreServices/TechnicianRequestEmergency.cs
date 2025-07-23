@@ -71,7 +71,8 @@ namespace Service.CoreServices.TechniciansServices
 
         public async Task<EmergencyRequestDetailsDTO> GetRequestDetailsByIdAsync(int id)
         {
-            var request = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(id);
+            var spec= new EmergencyRequestDetailsByIdSpecification(id);
+            var request = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(spec);
             return mapper.Map<EmergencyRequestDetailsDTO>(request);
         }
 
