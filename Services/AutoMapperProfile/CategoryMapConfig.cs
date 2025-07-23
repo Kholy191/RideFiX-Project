@@ -13,8 +13,10 @@ namespace Service.AutoMapperProfile
     {
         public CategoryMapConfig()
         {
-            CreateMap<TCategory, TCategoryDTO>();
-           
+            CreateMap<TCategory, TCategoryDTO>()
+                .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.Id))
+                .ReverseMap();
+
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Services
             Services.AddScoped<IRequestServices, RequstServices>();
             Services.AddScoped<ITechnicianService, TechnicianService>();
             Services.AddScoped<ITechnicianRequestEmergency, TechnicianRequestEmergency>();
+            Services.AddScoped<ICategoryService, CategoryService>();
             Services.AddAutoMapper(typeof(PreRequestMapConfig));
             return Services;
         }
