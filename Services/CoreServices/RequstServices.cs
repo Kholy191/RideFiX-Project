@@ -35,8 +35,6 @@ namespace Service.CoreServices
             throw new NotImplementedException();
         }
 
-
-
         public async Task CreateRealRequest(RealRequestDTO request)
         {
             var emergancyRequest = request.TechnicianIDs
