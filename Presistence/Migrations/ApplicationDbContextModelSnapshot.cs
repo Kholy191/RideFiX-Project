@@ -38,7 +38,7 @@ namespace Presistence.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("carOwners");
+                    b.ToTable("carOwners", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.ChatSession", b =>
@@ -70,7 +70,7 @@ namespace Presistence.Migrations
 
                     b.HasIndex("TechnicianId");
 
-                    b.ToTable("chatSessions");
+                    b.ToTable("chatSessions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.EmergencyRequest", b =>
@@ -121,7 +121,9 @@ namespace Presistence.Migrations
 
                     b.HasIndex("categoryId");
 
+
                     b.ToTable("emergencyRequests");
+
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Message", b =>
@@ -156,7 +158,36 @@ namespace Presistence.Migrations
 
                     b.HasIndex("ChatSessionId");
 
-                    b.ToTable("messages");
+                    b.ToTable("messages", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.MessageAttachment", b =>
+                {
+                    b.Property<int>("MessageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AttachmentUrl")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("MessageId", "AttachmentUrl");
+
+                    b.HasIndex("MessageId")
+                        .IsUnique();
+
+                    b.ToTable("MessageAttachment", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.RequestAttachment", b =>
+                {
+                    b.Property<int>("EmergencyRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AttachmentUrl")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("EmergencyRequestId", "AttachmentUrl");
+
+                    b.ToTable("RequestAttachment", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.MessageAttachment", b =>
@@ -219,7 +250,7 @@ namespace Presistence.Migrations
 
                     b.HasIndex("TechnicianId");
 
-                    b.ToTable("reviews");
+                    b.ToTable("reviews", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.TCategory", b =>
@@ -241,7 +272,7 @@ namespace Presistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("categories");
+                    b.ToTable("categories", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Technician", b =>
@@ -273,7 +304,7 @@ namespace Presistence.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("technicians");
+                    b.ToTable("technicians", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.IdentityEntities.ApplicationUser", b =>

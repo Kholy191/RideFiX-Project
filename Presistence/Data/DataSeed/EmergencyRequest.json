@@ -10,6 +10,7 @@
         "Latitude": 30.0444,
         "Longitude": 31.2357,
         "categoryId": 1
+
     },
     {
         "TechnicainId": 1,
@@ -22,6 +23,7 @@
         "Latitude": 30.0444,
         "Longitude": 31.2357,
         "categoryId": 1
+
     },
     {
         "TechnicainId": 1,
@@ -34,5 +36,5 @@
         "Latitude": 30.0444,
         "Longitude": 31.2357,
         "categoryId": 1
-
+    }
 ]
