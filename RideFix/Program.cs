@@ -48,12 +48,10 @@ namespace RideFix
             builder.Services.AddSwaggerGen();
 
             #region Services Configurations
-
-    
-
             builder.Services.AddPresistenceConfig(builder.Configuration); // Custom extension method to add persistence layer configurations
             builder.Services.AddServiceConfig();// Custom extension method to add service layer configurations
             #endregion
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                             .AddEntityFrameworkStores<ApplicationDbContext>()
                             .AddDefaultTokenProviders();
@@ -101,28 +99,6 @@ namespace RideFix
             #endregion
 
 
-            #region Invalid Model State Response Factory Configuration
-            builder.Services.Configure<ApiBehaviorOptions>(ApiBehaviorOptions =>
-            {
-                ApiBehaviorOptions.InvalidModelStateResponseFactory = context =>
-                {
-                    var errors = context.ModelState
-                        .Where(e => e.Value.Errors.Count > 0)
-                        .Select(e => new ErrorModels.ValidationError
-                        {
-                            Key = e.Key,
-                            Errors = e.Value.Errors.Select(x => x.ErrorMessage).ToArray()
-                        }).ToArray();
-                    var Error = new ErrorModels.ValidationErrorToReturn
-                    {
-                        Errors = errors,
-                    };
-                    return new BadRequestObjectResult(Error);
-                };
-            });
-            #endregion
-
-
             var app = builder.Build();
             app.UseCors("AllowAll");
 
@@ -141,19 +117,6 @@ namespace RideFix
             }
             #endregion
 
-            #region Exception Handler Middleware Configuration
-            app.UseMiddleware<CustomExceptionMiddleware>();
-            #endregion
-
-            #region Data Seeding Configuration
-            using (var scope = app.Services.CreateScope())
-            {
-                var dataSeeding = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
-                await dataSeeding.SeedCategories();
-                await dataSeeding.SeedIdentityDataAsync();
-                await dataSeeding.SeedDataAsync();
-            }
-            #endregion
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -161,6 +124,7 @@ namespace RideFix
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
             app.UseAuthentication();
             app.UseAuthorization();
 
