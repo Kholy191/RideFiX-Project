@@ -25,7 +25,7 @@ namespace RideFix.Controllers
             var request = await serviceManager.technicianRequestEmergency.GetRequestDetailsByIdAsync(id);
 
             if (request == null)
-                return NotFound(ApiResponse<string>.FailResponse("requestDetails not found with this id"));
+                return NotFound("requestDetails not found with this id");
 
             return Ok(ApiResponse<EmergencyRequestDetailsDTO>.SuccessResponse(request, "request details found"));
         }
