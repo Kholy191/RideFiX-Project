@@ -6,11 +6,6 @@ using ServiceAbstraction.CoreServicesAbstractions;
 using SharedData.DTOs.TechnicianEmergencyRequestDTOs;
 using SharedData.Enums;
 using SharedData.QueryModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.CoreServices.TechniciansServices
 {
@@ -29,20 +24,42 @@ namespace Service.CoreServices.TechniciansServices
             throw new NotImplementedException();
         }
 
+        //public async Task<bool> ApplyRequestFromHomePage(TechnicianApplyEmergencyRequestDTO emergencyRequestDTO)
+        //{
+        //    var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
+        //    EmergencyRequest requestToUpdate =await repo.GetByIdAsync(emergencyRequestDTO.RequestId);
+        //    if (requestToUpdate != null)
+        //    {
+        //        requestToUpdate.TechnicainId = emergencyRequestDTO.UserId;
+        //        requestToUpdate.s
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+
+        //}
+
         public async Task<List<EmergencyRequestDetailsDTO>> GetAllAcceptedRequestsAsync(int tecId)
         {
             var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
-            var allRequests = await repo.GetAllAsync(new EmergencyRequestSpecification(new RequestQueryData() { TechnicainId = tecId ,CallState=RequestState.Answered})) ;
+            var allRequests = await repo.GetAllAsync(new EmergencyRequestSpecification(new RequestQueryData() { TechnicainId = tecId, CallState = RequestState.Answered }));
             return mapper.Map<List<EmergencyRequestDetailsDTO>>(allRequests);
         }
 
-        public Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync()
+        public async Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync()
         {
-            throw new NotImplementedException();
+            var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
+            var allRequests = await repo.GetAllAsync(new EmergencyRequestSpecification(new RequestQueryData() { IsCompleted = false }));
+            return mapper.Map<List<EmergencyRequestDetailsDTO>>(allRequests);
+
         }
 
         public async Task<List<EmergencyRequestDetailsDTO>> GetAllRequestsAssignedToTechnicianAsync(int technicianId)
         {
+            var technician = await unitOfWork.GetRepository<Technician, int>().GetByIdAsync(technicianId);
+            if (technician == null)
+                return new List<EmergencyRequestDetailsDTO>();
             var spec = new RequestsAssignedToTechnicianSpecification(technicianId, RequestState.Waiting);
 
             var requests = await unitOfWork
@@ -58,9 +75,18 @@ namespace Service.CoreServices.TechniciansServices
             return mapper.Map<EmergencyRequestDetailsDTO>(request);
         }
 
-        public Task<bool> UpdateRequestFromCarOwnerAsync(TechnicianUpdateEmergencyRequestDTO emergencyRequestDTO)
+        public async Task<bool> UpdateRequestFromCarOwnerAsync(TechnicianUpdateEmergencyRequestDTO emergencyRequestDTO)
         {
-            throw new NotImplementedException();
+            var spec = new TechnicianUpdateRequestSpec(emergencyRequestDTO.RequestId, emergencyRequestDTO.TechnicianId);
+            var request = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(spec);
+            if (request == null) return false;
+            var technicianSpec = new TechnicianWithAppUserSpec( emergencyRequestDTO.TechnicianId,emergencyRequestDTO.Pin);
+            var technician = await unitOfWork.GetRepository<Technician, int>().GetByIdAsync(technicianSpec);
+            if (technician == null) return false;
+            request.CallState = emergencyRequestDTO.NewStatus;
+            request.IsCompleted = emergencyRequestDTO.IsCompleted;
+            await unitOfWork.SaveChangesAsync();
+            return true;
         }
     }
 }

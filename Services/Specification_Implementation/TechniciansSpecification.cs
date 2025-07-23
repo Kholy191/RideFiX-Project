@@ -22,6 +22,7 @@ namespace Service.Specification_Implementation
         {
             AddInclude(t => t.TCategories);
             AddInclude(t => t.ApplicationUser);
+            AddInclude(t => t.reviews);
 
         }
     }

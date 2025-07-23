@@ -13,11 +13,11 @@ namespace Presistence.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Technician> builder)
         {
-            builder.HasKey(co => co.Id);
+            builder.HasKey(te => te.Id);
 
-            builder.HasOne(co => co.ApplicationUser)
+            builder.HasOne(te => te.ApplicationUser)
                    .WithMany()
-                   .HasForeignKey(co => co.ApplicationUserId)
+                   .HasForeignKey(te => te.ApplicationUserId)
                    .OnDelete(DeleteBehavior.NoAction);
         }
     }

@@ -10,6 +10,7 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
    public class Technician : BaseEntity<int>
     {
+       
         public TimeOnly StartWorking { get; set; }
         public TimeOnly EndWorking { get; set; }
         public string Description { get; set; }
