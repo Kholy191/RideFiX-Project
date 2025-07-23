@@ -28,6 +28,12 @@ namespace Service.CoreServices
             mapper = _mapper;
             this.technicianService = technicianService;
         }
+
+        public Task CancelAll(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<PreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request)
         {
             

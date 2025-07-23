@@ -36,7 +36,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAllAcceptedRequests(int id)
+        public async Task<IActionResult> GetTechnicianByIdAsync(int id)
         {
             var result = await serviceManager.technicianService.GetTechnicianByIdAsync(id);
             if (result == null)
