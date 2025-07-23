@@ -12,6 +12,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Presistence;
 using Presistence.Data;
+using Domain.Contracts;
+using Domain.Entities.IdentityEntities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Presistence;
+using Presistence.Data;
 using RideFix.CustomMiddlewares;
 using Services;
 
@@ -25,13 +31,26 @@ namespace RideFix
 
             // Add services to the container.
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader();
+                    });
+            });
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             #region Services Configurations
-          
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>(); // Configuring Identity with Entity Framework Store
 
             builder.Services.AddPresistenceConfig(builder.Configuration); // Custom extension method to add persistence layer configurations
             builder.Services.AddServiceConfig();// Custom extension method to add service layer configurations
@@ -83,7 +102,45 @@ namespace RideFix
             #endregion
 
 
+            #region Invalid Model State Response Factory Configuration
+            builder.Services.Configure<ApiBehaviorOptions>(ApiBehaviorOptions =>
+            {
+                ApiBehaviorOptions.InvalidModelStateResponseFactory = context =>
+                {
+                    var errors = context.ModelState
+                        .Where(e => e.Value.Errors.Count > 0)
+                        .Select(e => new ErrorModels.ValidationError
+                        {
+                            Key = e.Key,
+                            Errors = e.Value.Errors.Select(x => x.ErrorMessage).ToArray()
+                        }).ToArray();
+                    var Error = new ErrorModels.ValidationErrorToReturn
+                    {
+                        Errors = errors,
+                    };
+                    return new BadRequestObjectResult(Error);
+                };
+            });
+            #endregion
+
+
             var app = builder.Build();
+            app.UseCors("AllowAll");
+
+
+            #region Exception Handler Middleware Configuration
+            app.UseMiddleware<CustomExceptionMiddleware>();
+            #endregion
+
+            #region Data Seeding Configuration
+            using (var scope = app.Services.CreateScope())
+            {
+                var dataSeeding = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
+                await dataSeeding.SeedCategories();
+                await dataSeeding.SeedIdentityDataAsync();
+                await dataSeeding.SeedDataAsync();
+            }
+            #endregion
 
             #region Exception Handler Middleware Configuration
             app.UseMiddleware<CustomExceptionMiddleware>();

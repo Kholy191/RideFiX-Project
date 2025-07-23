@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Presistence.Data;
 
@@ -11,9 +12,11 @@ using Presistence.Data;
 namespace Presistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250721134424_add description")]
+    partial class adddescription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +41,7 @@ namespace Presistence.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("carOwners", (string)null);
+                    b.ToTable("carOwners");
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.ChatSession", b =>
@@ -70,7 +73,7 @@ namespace Presistence.Migrations
 
                     b.HasIndex("TechnicianId");
 
-                    b.ToTable("chatSessions", (string)null);
+                    b.ToTable("chatSessions");
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.EmergencyRequest", b =>
@@ -121,9 +124,7 @@ namespace Presistence.Migrations
 
                     b.HasIndex("categoryId");
 
-
                     b.ToTable("emergencyRequests");
-
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Message", b =>
@@ -158,36 +159,7 @@ namespace Presistence.Migrations
 
                     b.HasIndex("ChatSessionId");
 
-                    b.ToTable("messages", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.MessageAttachment", b =>
-                {
-                    b.Property<int>("MessageId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AttachmentUrl")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("MessageId", "AttachmentUrl");
-
-                    b.HasIndex("MessageId")
-                        .IsUnique();
-
-                    b.ToTable("MessageAttachment", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.RequestAttachment", b =>
-                {
-                    b.Property<int>("EmergencyRequestId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AttachmentUrl")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("EmergencyRequestId", "AttachmentUrl");
-
-                    b.ToTable("RequestAttachment", (string)null);
+                    b.ToTable("messages");
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.MessageAttachment", b =>
@@ -250,7 +222,7 @@ namespace Presistence.Migrations
 
                     b.HasIndex("TechnicianId");
 
-                    b.ToTable("reviews", (string)null);
+                    b.ToTable("reviews");
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.TCategory", b =>
@@ -272,7 +244,7 @@ namespace Presistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("categories", (string)null);
+                    b.ToTable("categories");
                 });
 
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.Technician", b =>
@@ -304,7 +276,7 @@ namespace Presistence.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("technicians", (string)null);
+                    b.ToTable("technicians");
                 });
 
             modelBuilder.Entity("Domain.Entities.IdentityEntities.ApplicationUser", b =>

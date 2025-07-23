@@ -29,7 +29,9 @@ namespace Presistence
 
         public async Task SeedCategories()
         {
-             var Res = await _context.categories.AnyAsync();
+
+            var Res = await _context.categories.AnyAsync();
+
             if (!Res)
             {
                 var _categories = File.OpenRead(@"..\Presistence\Data\DataSeed\Category.json");
@@ -152,11 +154,6 @@ namespace Presistence
                 {
                     var users = File.OpenRead(@"..\Presistence\Data\DataSeed\Users.json");
                     var usersData = await JsonSerializer.DeserializeAsync<List<ApplicationUser>>(users);
-
-
-
-
-
 
                     var stream = File.OpenRead(@"..\Presistence\Data\DataSeed\Tech.json");
                     var options = new JsonSerializerOptions
