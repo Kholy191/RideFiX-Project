@@ -20,13 +20,6 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         [ForeignKey("category")]
         public int categoryId { get; set; }
 
-        public string Description { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        [ForeignKey("category")]
-        public int categoryId { get; set; }
-
-
         //navigations
         public int TechnicainId { get; set; }
         public Technician Technician { get; set; }

@@ -19,6 +19,11 @@ namespace Service.CoreServices.TechniciansServices
             mapper = _mapper;
         }
 
+        public Task<bool> ApplyRequestFromHomePage(TechnicianApplyEmergencyRequestDTO emergencyRequestDTO)
+        {
+            throw new NotImplementedException();
+        }
+
         //public async Task<bool> ApplyRequestFromHomePage(TechnicianApplyEmergencyRequestDTO emergencyRequestDTO)
         //{
         //    var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
