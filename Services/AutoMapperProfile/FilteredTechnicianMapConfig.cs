@@ -8,6 +8,7 @@ using Domain.Entities.CoreEntites.EmergencyEntities;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Service.HelperMethods;
 using SharedData.DTOs;
+using SharedData.DTOs.ReviewsDTOs;
 using SharedData.DTOs.TechnicianDTOs;
 
 namespace Service.AutoMapperProfile
@@ -18,7 +19,7 @@ namespace Service.AutoMapperProfile
         {
             CreateMap<Technician, FilteredTechniciansDTO>()
             .ForMember(dest => dest.TCategories, opt => opt.MapFrom(src => src.TCategories))
-            .ForMember(dest => dest.reviews, opt => opt.MapFrom(src => new ReviewDTO())) // ✨ مهم عشان تمنع null
+            .ForMember(dest => dest.reviews, opt => opt.MapFrom(src => new ReviewDTO())) 
             .AfterMap((src, dest) =>
             {
                 dest.StartWorking = src.StartWorking.ToString();

@@ -35,5 +35,16 @@ namespace Presentation.Controllers
             //return Ok(result.Technicians);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAllAcceptedRequests(int id)
+        {
+            var result = await serviceManager.technicianService.GetTechnicianByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound("There is No Technicians match this ID");
+            }
+            return Ok(ApiResponse<TechnicianDTO>.SuccessResponse(result, "Target Technician Selected"));
+        }
+
     }
 }
