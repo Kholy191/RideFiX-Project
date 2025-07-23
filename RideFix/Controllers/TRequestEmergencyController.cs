@@ -25,10 +25,7 @@ namespace RideFix.Controllers
             var request = await serviceManager.technicianRequestEmergency.GetRequestDetailsByIdAsync(id);
 
             if (request == null)
-            {
-                var errorResponse = ApiResponse<string>.FailResponse("Request not found with this ID");
-                return new ObjectResult(errorResponse) { StatusCode = 404 };
-            }
+                return NotFound(ApiResponse<string>.FailResponse("requestDetails not found with this id"));
 
             return Ok(ApiResponse<EmergencyRequestDetailsDTO>.SuccessResponse(request, "request details found"));
         }
@@ -38,8 +35,17 @@ namespace RideFix.Controllers
         {
             var request = await serviceManager.technicianRequestEmergency.GetAllAcceptedRequestsAsync(technicalId);
             if (request == null)
-                return NotFound("request with id not found y s7by");
-            return Ok(request);
+                return NotFound(ApiResponse<string>.FailResponse("technician doesn't have requests"));
+            return Ok(ApiResponse<List<EmergencyRequestDetailsDTO>>.SuccessResponse(request, "technician have requests"));
+        }
+        [HttpGet("active")]
+       
+        public async Task<ActionResult<EmergencyRequestDetailsDTO>> GetAllActiveedRequests()
+        {
+            var request = await serviceManager.technicianRequestEmergency.GetAllActiveRequestsAsync();
+            if (request == null)
+                return NotFound(ApiResponse<string>.FailResponse("technician doesn't have requests"));
+            return Ok(ApiResponse<List<EmergencyRequestDetailsDTO>>.SuccessResponse(request, "technician have requests"));
         }
 
         [EndpointSummary("Get RequestsAssignedToTechnician by technicianId if it's waiting state")]
@@ -50,13 +56,10 @@ namespace RideFix.Controllers
              to do:
             validate if technicianId found or not 
              */
-
+           
             var request = await serviceManager.technicianRequestEmergency.GetAllRequestsAssignedToTechnicianAsync(technicianId);
             if (request == null || !request.Any())
-            {
-                var errorResponse = ApiResponse<string>.FailResponse("No requests found for this technician");
-                return new ObjectResult(errorResponse) { StatusCode = 404 };
-            }
+                return NotFound(ApiResponse<string>.FailResponse("technician doesn't have requests"));
             return Ok(ApiResponse<List<EmergencyRequestDetailsDTO>>.SuccessResponse(request, "technician have requests"));
         }
         [HttpPut]

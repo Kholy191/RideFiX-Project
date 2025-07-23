@@ -14,7 +14,6 @@ namespace SharedData.DTOs.TechnicianDTOs
         public string EndWorking { get; set; }
         public string Description { get; set; }
         public ICollection<TCategoryDTO> TCategories { get; set; } = new List<TCategoryDTO>();
-        public ICollection<ReviewDTO> reviews { get; set; } = new List<ReviewDTO>();
-
+        public ReviewDTO reviews { get; set; } 
     }
 }
