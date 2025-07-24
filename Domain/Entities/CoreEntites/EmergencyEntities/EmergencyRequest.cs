@@ -21,8 +21,14 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         public int categoryId { get; set; }
 
         //navigations
-        public int TechnicainId { get; set; }
-        public Technician Technician { get; set; }
+        //public int TechnicainId { get; set; }
+        //public Technician Technician { get; set; }
+
+
+        //when car owner create request he can select multiple technicians
+        public ICollection<Technician> Technicians { get; set; } = new HashSet<Technician>();
+        // this is for technician to make reverse request to car owner
+        public ICollection<TechReverseRequest> TechReverseRequests { get; set; } = new HashSet<TechReverseRequest>();   
         public int CarOwnerId { get; set; }
         public CarOwner CarOwner { get; set; }
         public ICollection<RequestAttachment>? requestAttachments { get; set; } = new HashSet<RequestAttachment>();

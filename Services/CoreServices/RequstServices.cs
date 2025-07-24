@@ -41,10 +41,12 @@ namespace Service.CoreServices
                 .Select(technicianId => new EmergencyRequest
                 {
                     CarOwnerId = request.CarOwnerId,
-                    TechnicainId = technicianId,
+                    //   TechnicainId = technicianId,
+                    // update request to map multible of tichnical instead of one
+                    Technicians = request.TechnicianIDs.Select(id => new Technician { Id = id }).ToList(),
                     Description = request.Description,
                     Latitude = request.Latitude,
-                    Longitude = request.Longitude,             
+                    Longitude = request.Longitude,
                     CallState = RequestState.Waiting,
                     IsCompleted = false,
                     TimeStamp = DateTime.UtcNow,
@@ -63,7 +65,7 @@ namespace Service.CoreServices
 
         public async Task<PreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request)
         {
-            
+
             var spec = new CarOwnerSpecification(request);
             var user = await unitOfWork.GetRepository<CarOwner, int>().GetByIdAsync(spec);
 
@@ -80,7 +82,7 @@ namespace Service.CoreServices
             {
                 return new PreRequestDTO { };
             }
-            
+
             return new PreRequestDTO { Technicians = filteredTechnicians };
 
         }
