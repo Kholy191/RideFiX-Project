@@ -9,11 +9,17 @@ using System.Threading.Tasks;
 
 namespace Service.AutoMapperProfile
 {
-    public class ReviewMapConfig : Profile
+    public class ReviewDetailsMapConfig : Profile
     {
-        public ReviewMapConfig()
+        public ReviewDetailsMapConfig() 
         {
-            CreateMap<Review, ReviewDTO>();
+            CreateMap<Review, ReviewDetailsDTO>().ReverseMap();
+                
+
+
+
+
         }
+
     }
 }

@@ -9,9 +9,10 @@ namespace SharedData.DTOs.RequestsDTOs
 {
     public class RealRequestDTO
     {
-        public List<int> TechnicianIDs { get; set; }
+        public HashSet<int> TechnicianIDs { get; set; }
         public string Description { get; set; }
-        public List<string>? ImageUrl { get; set; }
+        public HashSet<string>? ImageUrl { get; set; }
+
 
         [Range(1, int.MaxValue, ErrorMessage = "CategoryId must be greater than 0.")]
         public int categoryId { get; set; }

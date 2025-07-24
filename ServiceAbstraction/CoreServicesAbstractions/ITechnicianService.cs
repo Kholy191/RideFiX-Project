@@ -13,6 +13,8 @@ namespace ServiceAbstraction.CoreServicesAbstractions
         public Task<List<FilteredTechniciansDTO>> GetTechniciansByFilterAsync(CreatePreRequestDTO request);
         public Task<string> GetCity(double Latitude, double Longitude);
         public Task<List<FilteredTechniciansDTO>> GetAllTechnicians();
+        public Task<TechnicianDTO> GetTechnicianByIdAsync(int id);
+
 
     }
 }

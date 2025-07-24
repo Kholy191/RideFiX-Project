@@ -62,6 +62,18 @@ namespace Service.CoreServices
             }
         }
 
+        public async Task<TechnicianDTO> GetTechnicianByIdAsync(int id)
+        {
+            var spec = new TechnicianWithReviewsAndCatergorySpecification(id);
+            var technician = await unitOfWork.GetRepository<Technician, int>().GetByIdAsync(spec);
+            if (technician == null)
+            {
+                throw new TechnicianNotFountException();
+            }
+            var mappedTechnician = mapper.Map<Technician, TechnicianDTO>(technician);
+            return mappedTechnician;
+        }
+
         public async Task<List<FilteredTechniciansDTO>> GetTechniciansByFilterAsync(CreatePreRequestDTO request)
         {
             TimeOnly currentTime = TimeOnly.FromDateTime(DateTime.Now);

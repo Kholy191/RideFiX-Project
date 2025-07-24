@@ -7,7 +7,6 @@ namespace SharedData.Enums
 {
     public enum Government
     {
-
         القاهرة,
         الجيزة,
         الإسكندرية,
@@ -16,7 +15,7 @@ namespace SharedData.Enums
         السويس,
         الدقهلية,
         الشرقية,
-        أسيوط,
+        أسيوط,  
         الغربية,
         المنوفية,
         البحيرة,
@@ -29,6 +28,5 @@ namespace SharedData.Enums
         مطروح,
         دمياط,
         الإسماعيلية
-
     }
 }
