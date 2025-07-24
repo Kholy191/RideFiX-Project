@@ -11,7 +11,8 @@ namespace Service.Specification_Implementation
 {
     public class TechnicianWithReviewsAndCatergorySpecification : Specification<Technician, int>
     {
-        public TechnicianWithReviewsAndCatergorySpecification(Expression<Func<Technician, bool>> _criteria) : base(_criteria)
+        public TechnicianWithReviewsAndCatergorySpecification(int id) :
+            base(t => t.Id == id )
         {
             AddInclude(technician => technician.ApplicationUser);
             AddInclude(technician => technician.reviews);
