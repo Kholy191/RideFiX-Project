@@ -19,6 +19,12 @@ namespace Presistence.Data.Configurations
                    .WithMany()
                    .HasForeignKey(te => te.ApplicationUserId)
                    .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany(te => te.EmergencyRequestTechnicians)
+                   .WithOne(ert => ert.Technician)
+                   .HasForeignKey(ert => ert.TechnicianId)
+                   .OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 }
