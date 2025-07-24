@@ -14,6 +14,10 @@ namespace SharedData.DTOs.RequestsDTOs
         public HashSet<string>? ImageUrl { get; set; }
 
 
+        [Required(ErrorMessage = "PIN is required.")]
+        public int PIN { get; set; }
+
+
         [Range(1, int.MaxValue, ErrorMessage = "CategoryId must be greater than 0.")]
         public int categoryId { get; set; }
 
