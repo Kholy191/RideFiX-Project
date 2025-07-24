@@ -31,5 +31,16 @@ namespace Presentation.Controllers
             await serviceManager.requestServices.CreateRealRequest(request);
             return Ok(ApiResponse<string>.SuccessResponse(null, "requests succesfully created"));
         }
+
+        [HttpDelete("CancelAll/{CarOwnerID}")]
+        public async Task<IActionResult> CancelAll(int CarOwnerID)
+        {
+            if (CarOwnerID <= 0)
+            {
+                return BadRequest("Invalid Car Owner ID.");
+            }
+            await serviceManager.requestServices.CancelAll(CarOwnerID);
+            return Ok(ApiResponse<string>.SuccessResponse(null, "All requests cancelled successfully."));
+        }
     }
 }
