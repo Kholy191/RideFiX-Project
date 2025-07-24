@@ -16,6 +16,9 @@ namespace Service.AutoMapperProfile
             CreateMap<Review, ReviewDetailsDTO>().ReverseMap();
                 
 
+
+
+
         }
 
     }

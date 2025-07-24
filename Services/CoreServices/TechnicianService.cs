@@ -64,7 +64,7 @@ namespace Service.CoreServices
 
         public async Task<TechnicianDTO> GetTechnicianByIdAsync(int id)
         {
-            var spec = new TechnicianWithReviewsAndCatergorySpecification(t=>t.Id == id);
+            var spec = new TechnicianWithReviewsAndCatergorySpecification(id);
             var technician = await unitOfWork.GetRepository<Technician, int>().GetByIdAsync(spec);
             if (technician == null)
             {
