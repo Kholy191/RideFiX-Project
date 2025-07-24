@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
-    public class EmergencyRequestTechnicians : BaseEntity<int>
+    public class EmergencyRequestTechnicians
     {
         public RequestState CallStatus { get; set; }
         [ForeignKey("Technician")]

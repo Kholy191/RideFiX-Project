@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedData.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         public int TechnicianId { get; set; }
         public Technician Technician { get; set; }
         public DateTime TimeStamp { get; set; }
-        public bool IsAccepted { get; set; } = false;
+        public RequestState CallState { get; set; } 
 
 
     }
