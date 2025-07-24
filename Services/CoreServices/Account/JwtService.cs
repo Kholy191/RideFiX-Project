@@ -27,12 +27,12 @@ namespace Service.CoreServices.Account
         public string generateToken(ApplicationUser user, IList<string> roles)
         {
             var claims = new List<Claim>() {
-               new Claim(ClaimTypes.NameIdentifier, user.Id),
+               new Claim("Id", user.Id),
                 new Claim("Email" , user.Email) , 
                 new Claim ("Name" , user.Name) ,
             };
             foreach(var role in roles)
-            claims.Add(new Claim(ClaimTypes.Role, role));
+            claims.Add(new Claim("Role", role));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

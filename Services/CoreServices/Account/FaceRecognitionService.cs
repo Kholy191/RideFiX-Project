@@ -21,7 +21,6 @@ namespace Service.CoreServices.Account
             using var client = new HttpClient();
             using var form = new MultipartFormDataContent();
 
-            // حقل api_key
             var apiKeyContent = new StringContent(ApiKey);
             apiKeyContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
             {
@@ -29,7 +28,6 @@ namespace Service.CoreServices.Account
             };
             form.Add(apiKeyContent);
 
-            // حقل api_secret
             var apiSecretContent = new StringContent(ApiSecret);
             apiSecretContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
             {
