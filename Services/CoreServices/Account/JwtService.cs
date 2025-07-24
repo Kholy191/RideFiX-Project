@@ -33,7 +33,7 @@ namespace Service.CoreServices.Account
                 new Claim ("Name" , user.Name) ,
             };
             foreach(var role in roles)
-            claims.Add(new Claim(ClaimTypes.Role, role));
+            claims.Add(new Claim("Role", role));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

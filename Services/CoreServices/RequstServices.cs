@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities.CoreEntites.EmergencyEntities;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Service.Exception_Implementation;
 using Service.Exception_Implementation.BadRequestExceptions;
 using Service.Exception_Implementation.NotFoundExceptions;
@@ -30,40 +31,62 @@ namespace Service.CoreServices
             this.technicianService = technicianService;
         }
 
-        public Task CancelAll(int id)
+        public async Task CancelAll(int CarOwnerID)
         {
-            throw new NotImplementedException();
+            var spec = new CancelledRquestSpecification(CarOwnerID);
+            var emergencyRequests = await unitOfWork.GetRepository<EmergencyRequestTechnicians, int>().GetAllAsync();
+            if (emergencyRequests == null || !emergencyRequests.Any())
+            {
+                //////////////////////////////////////////////////////
+            }
+            foreach (var emergencyRequest in emergencyRequests)
+            {
+                if (emergencyRequest.CallStatus == RequestState.Waiting)
+                {
+                    emergencyRequest.CallStatus = RequestState.Cancelled;
+                    unitOfWork.GetRepository<EmergencyRequestTechnicians, int>().Update(emergencyRequest);
+                }
+            }
+            await unitOfWork.SaveChangesAsync();
+
         }
 
         public async Task CreateRealRequest(RealRequestDTO request)
         {
-            var emergancyRequest = request.TechnicianIDs
-                .Select(technicianId => new EmergencyRequest
-                {
-                    CarOwnerId = request.CarOwnerId,
-                    TechnicainId = technicianId,
-                    Description = request.Description,
-                    Latitude = request.Latitude,
-                    Longitude = request.Longitude,             
-                    CallState = RequestState.Waiting,
-                    IsCompleted = false,
-                    TimeStamp = DateTime.UtcNow,
-                    EndTimeStamp = null,
-                    categoryId = request.categoryId
-                }).ToList();
-            foreach (var item in emergancyRequest)
+            var emergancyRequest = new EmergencyRequest
             {
-                await unitOfWork.GetRepository<EmergencyRequest, int>().AddAsync(item);
+                CarOwnerId = request.CarOwnerId,
+                Description = request.Description,
+                Latitude = request.Latitude,
+                Longitude = request.Longitude,
+                IsCompleted = false,
+                TimeStamp = DateTime.UtcNow,
+                EndTimeStamp = null,
+                categoryId = request.categoryId
+            };
+            
+            await unitOfWork.GetRepository<EmergencyRequest, int>().AddAsync(emergancyRequest);
+            if (request.TechnicianIDs != null && request.TechnicianIDs.Any())
+            {
+                foreach (var technicianId in request.TechnicianIDs)
+                {
+                    var emergencyRequestTechnicians = new EmergencyRequestTechnicians
+                    {
+                        EmergencyRequestId = emergancyRequest.Id,
+                        TechnicianId = technicianId,
+                        CallStatus = RequestState.Waiting
+                    };
+                    await unitOfWork.GetRepository<EmergencyRequestTechnicians, int>().AddAsync(emergencyRequestTechnicians);
+                }
             }
+
             await unitOfWork.SaveChangesAsync();
-
-
 
         }
 
         public async Task<PreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request)
         {
-            
+
             var spec = new CarOwnerSpecification(request);
             var user = await unitOfWork.GetRepository<CarOwner, int>().GetByIdAsync(spec);
 
@@ -71,16 +94,12 @@ namespace Service.CoreServices
             {
                 throw new CarOwnerNotFoundException();
             }
-            else if (user.ApplicationUser.PIN != request.PIN)
-            {
-                throw new PinCodeBadRequestException();
-            }
             var filteredTechnicians = await technicianService.GetTechniciansByFilterAsync(request);
             if (filteredTechnicians == null || !filteredTechnicians.Any())
             {
                 return new PreRequestDTO { };
             }
-            
+
             return new PreRequestDTO { Technicians = filteredTechnicians };
 
         }
