@@ -24,10 +24,11 @@ namespace Service.CoreServices.Account
         {
             this._configuration = configuration;
         }
-        public string generateToken(ApplicationUser user, IList<string> roles)
+        public string generateToken(ApplicationUser user, IList<string> roles  ,int roleEntityId)
         {
             var claims = new List<Claim>() {
-               new Claim(ClaimTypes.NameIdentifier, user.Id),
+
+               new Claim("Id", roleEntityId.ToString()),
                 new Claim("Email" , user.Email) , 
                 new Claim ("Name" , user.Name) ,
             };

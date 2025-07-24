@@ -41,7 +41,7 @@ namespace SharedData.DTOs.Account
         [RegularExpression("^(CarOwner|Technician)$", ErrorMessage = "Role must be either 'CarOwner' or 'Technician'")]
         public string Role { get; set; }
 
-
+            public int PIN { get; set; }
         public TimeOnly? StartWorking { get; set; }
 
         public TimeOnly? EndWorking { get; set; }
