@@ -18,6 +18,11 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         public Double Longitude { get; set; }
         [ForeignKey("category")]
         public int categoryId { get; set; }
+        public int? Rate { get; set; }
+        public string? Comment { get; set; }
+
+        //endPoint
+        public DateOnly? CompeletRequestDate { get; set; } 
 
         //navigations
         public int? TechnicianId { get; set; }

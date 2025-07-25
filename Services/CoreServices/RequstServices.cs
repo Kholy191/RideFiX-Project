@@ -130,5 +130,26 @@ namespace Service.CoreServices
             var mappedRequests = mapper.Map<List<RequestBreifDTO>>(emergencyRequests);
             return mappedRequests;
         }
+
+        public async Task<RequestDetailsDTO> RequestDetailsDTOs(int requestId)
+        {
+            var emergencyRequest = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(requestId);
+            if (emergencyRequest == null)
+            {
+                throw new RequestNotFoundException();
+            }
+            string city = await technicianService.GetCity(emergencyRequest.Latitude, emergencyRequest.Longitude);
+            var mappedRequest = new RequestDetailsDTO()
+            {
+                City = city,
+                Description = emergencyRequest.Description,
+                TechnicianName = emergencyRequest.Technician.ApplicationUser.Name,
+                Rate = emergencyRequest.Rate ?? 0,
+                Comment = emergencyRequest.Comment ?? "",
+                CategoryName = emergencyRequest.category.Name,
+                RequestDate = emergencyRequest.CompeletRequestDate ?? DateOnly.FromDateTime(DateTime.UtcNow)
+            };
+            return mappedRequest;
+        }
     }
 }
