@@ -12,6 +12,7 @@ using Service.CoreServices;
 using Service.CoreServices.TechniciansServices;
 using ServiceAbstraction;
 using ServiceAbstraction.CoreServicesAbstractions;
+using Domain.Contracts.ReposatoriesContract;
 
 
 

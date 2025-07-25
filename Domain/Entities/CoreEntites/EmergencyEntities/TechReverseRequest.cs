@@ -18,7 +18,5 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         public Technician Technician { get; set; }
         public DateTime TimeStamp { get; set; }
         public RequestState CallState { get; set; } 
-
-
     }
 }

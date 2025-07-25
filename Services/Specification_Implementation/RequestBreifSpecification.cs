@@ -16,7 +16,7 @@ namespace Service.Specification_Implementation
             && r.IsCompleted == true)
         {
             AddInclude(r => r.category);
-            AddInclude(r => r.Technicians);
+            AddInclude(r => r.Technician);
         }
     }
     

@@ -17,7 +17,7 @@ namespace Presistence.Data.Configurations
             builder.Property(er => er.IsCompleted)
                    .IsRequired();
 
-            builder.HasMany(EmergencyRequestTechnicians => EmergencyRequestTechnicians.EmergencyRequestTechnicians)
+            builder.HasMany(e => e.EmergencyRequestTechnicians)
                     .WithOne(er => er.EmergencyRequests)
                     .HasForeignKey(er => er.EmergencyRequestId)
                    .OnDelete(DeleteBehavior.NoAction);
@@ -26,6 +26,8 @@ namespace Presistence.Data.Configurations
                    .WithMany(er=>er.EmergencyRequests)
                    .HasForeignKey(er => er.CarOwnerId)
                    .OnDelete(DeleteBehavior.NoAction);
+
+            //builder.
         }
     }
 }

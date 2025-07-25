@@ -19,7 +19,7 @@ namespace Service.AutoMapperProfile
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .AfterMap((src, dest) =>
             {
-                dest.TechnicianName = src.Technicians.FirstOrDefault()?.ApplicationUser?.Name;
+                dest.TechnicianName = src.Technician.ApplicationUser.Name; // can be error "Apply Specification"
             });
                 }
     }

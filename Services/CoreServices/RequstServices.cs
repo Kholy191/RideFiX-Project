@@ -53,39 +53,45 @@ namespace Service.CoreServices
 
         public async Task CreateRealRequest(RealRequestDTO request)
         {
-           
-            var emergancyRequest = new EmergencyRequest
+            var carOwnerRepo = unitOfWork.GetRepository<CarOwner, int>();
+            var specification = new CarOwnerUserPinSpecification(request);
+            if (request.pin == carOwnerRepo.GetByIdAsync(specification).Result.ApplicationUser.PIN)
             {
-                CarOwnerId = request.CarOwnerId,
-                Description = request.Description,
-                Latitude = request.Latitude,
-                Longitude = request.Longitude,
-                IsCompleted = false,
-                TimeStamp = DateTime.UtcNow,
-                EndTimeStamp = null,
-                categoryId = request.categoryId
-              
-
-            };
-            
-            await unitOfWork.GetRepository<EmergencyRequest, int>().AddAsync(emergancyRequest);
-
-            if (request.TechnicianIDs != null && request.TechnicianIDs.Any())
-            {
-                foreach (var technicianId in request.TechnicianIDs)
+                var emergancyRequest = new EmergencyRequest
                 {
-                    var emergencyRequestTechnicians = new EmergencyRequestTechnicians
+                    CarOwnerId = request.CarOwnerId,
+                    Description = request.Description,
+                    Latitude = request.Latitude,
+                    Longitude = request.Longitude,
+                    IsCompleted = false,
+                    TimeStamp = DateTime.UtcNow,
+                    EndTimeStamp = null,
+                    categoryId = request.categoryId
+                };
+                await unitOfWork.GetRepository<EmergencyRequest, int>().AddAsync(emergancyRequest);
+                await unitOfWork.SaveChangesAsync();
+
+
+                if (request.TechnicianIDs != null && request.TechnicianIDs.Any())
+                {
+                    foreach (var technicianId in request.TechnicianIDs)
                     {
-                        EmergencyRequestId = emergancyRequest.Id,
-                        TechnicianId = technicianId,
-                        CallStatus = RequestState.Waiting
-                    };
-                    await unitOfWork.EmergencyRequestRepository.AddAsync(emergencyRequestTechnicians);
+                        var emergencyRequestTechnicians = new EmergencyRequestTechnicians
+                        {
+                            EmergencyRequestId = emergancyRequest.Id,
+                            TechnicianId = technicianId,
+                            CallStatus = RequestState.Waiting
+                        };
+                        await unitOfWork.EmergencyRequestRepository.AddAsync(emergencyRequestTechnicians);
+                    }
                 }
+
+                await unitOfWork.SaveChangesAsync();
             }
-
-            await unitOfWork.SaveChangesAsync();
-
+            else
+            {
+                throw new PinCodeBadRequestException();
+            }
         }
 
         public async Task<PreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request)

@@ -14,9 +14,6 @@ namespace SharedData.DTOs.RequestsDTOs
         public HashSet<string>? ImageUrl { get; set; }
 
 
-        [Required(ErrorMessage = "PIN is required.")]
-        public int PIN { get; set; }
-
 
         [Range(1, int.MaxValue, ErrorMessage = "CategoryId must be greater than 0.")]
         public int categoryId { get; set; }
@@ -30,6 +27,8 @@ namespace SharedData.DTOs.RequestsDTOs
         [Range(-180, 180, ErrorMessage = "Longitude must be between -180 and 180.")]
         public double Longitude { get; set; }
 
+        [Required(ErrorMessage = "PIN is required.")]
+        public int pin { get; set; }
 
     }
 }
