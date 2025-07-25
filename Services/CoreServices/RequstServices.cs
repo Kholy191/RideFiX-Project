@@ -173,8 +173,6 @@ namespace Service.CoreServices
                 City = city,
                 Description = emergencyRequest.Description,
                 TechnicianName = emergencyRequest.Technician.ApplicationUser.Name,
-                Rate = emergencyRequest.Rate ?? 0,
-                Comment = emergencyRequest.Comment ?? "",
                 CategoryName = emergencyRequest.category.Name,
                 RequestDate = emergencyRequest.CompeletRequestDate ?? DateOnly.FromDateTime(DateTime.UtcNow)
             };
