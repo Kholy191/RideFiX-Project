@@ -13,8 +13,8 @@ namespace Service.AutoMapperProfile
     {
         public ReviewAddMapConfig()
         {
-            CreateMap<AddReviewDTO, Review>()
-                .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => DateTime.Now));
+            CreateMap<AddReviewDTO, Review>().ReverseMap();
+
         }
     }
 }

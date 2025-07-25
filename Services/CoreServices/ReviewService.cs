@@ -30,7 +30,6 @@ namespace Service.CoreServices
             var review = mapper.Map<Review>(addReview);
             await unitOfWork.GetRepository<Review, int>().AddAsync(review);
             await unitOfWork.SaveChangesAsync();
-
         }
     }
 }

@@ -18,17 +18,21 @@ namespace Services
 
         public ITechnicianRequestEmergency technicianRequestEmergency { get; }
         public ICategoryService categoryService { get; }
+        public IReviewService reviewService { get; }
 
 
         public ServiceManager(IRequestServices requestServices,
                     ITechnicianService technicianService, 
                     ITechnicianRequestEmergency _tech,
-                    ICategoryService categoryService)
+                    ICategoryService categoryService,
+                    IReviewService reviewService)
         {
             this.requestServices = requestServices;
             this.technicianService = technicianService;
             this.technicianRequestEmergency = _tech;
             this.categoryService = categoryService;
+            this.reviewService = reviewService;
+            
         }
 
 
