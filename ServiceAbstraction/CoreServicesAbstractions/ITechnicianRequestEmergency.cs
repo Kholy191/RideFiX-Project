@@ -7,7 +7,7 @@ namespace ServiceAbstraction.CoreServicesAbstractions
 
         Task<EmergencyRequestDetailsDTO> GetRequestDetailsByIdAsync(int requestId,int technicianId); // to show reguest details
         Task<List<EmergencyRequestDetailsDTO>> GetAllAcceptedRequestsAsync(int technicianId); // for history
-        Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync(); // to apply this request from home page
+        Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync(int technicianId); // to apply this request from home page
         Task<bool> UpdateRequestFromCarOwnerAsync(TechnicianUpdateEmergencyRequestDTO emergencyRequestDTO); // accept or reject
         Task<bool> ApplyRequestFromHomePage(TechnicianApplyEmergencyRequestDTO emergencyRequestDTO);
         Task<List<EmergencyRequestDetailsDTO>> GetAllRequestsAssignedToTechnicianAsync(int technicianId);

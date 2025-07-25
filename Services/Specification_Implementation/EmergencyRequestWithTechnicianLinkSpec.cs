@@ -10,6 +10,11 @@ namespace Service.Specification_Implementation
 {
     public class EmergencyRequestWithTechnicianLinkSpec : Specification<EmergencyRequest, int>
     {
+        public EmergencyRequestWithTechnicianLinkSpec(int technicalId, bool isCompleted) : base(r => r.IsCompleted == isCompleted && r.TechnicianId != technicalId)
+        {
+            AddInclude(req => req.EmergencyRequestTechnicians);
+            AddInclude(req => req.TechReverseRequests);
+        }
         public EmergencyRequestWithTechnicianLinkSpec(int requestId) : base(req => req.Id == requestId)
         {
             AddInclude(req => req.EmergencyRequestTechnicians);
