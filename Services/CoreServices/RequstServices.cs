@@ -8,6 +8,7 @@ using Domain.Contracts;
 using Domain.Entities.CoreEntites.EmergencyEntities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Service.Exception_Implementation;
+using Service.Exception_Implementation.AlreadyFound;
 using Service.Exception_Implementation.BadRequestExceptions;
 using Service.Exception_Implementation.NotFoundExceptions;
 using Service.Specification_Implementation;
@@ -48,6 +49,32 @@ namespace Service.CoreServices
                 }
             }
             await unitOfWork.SaveChangesAsync();
+
+        }
+
+        public async Task CompleteRequest(int requestId)
+        {
+            var emergencyRequest = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(requestId);
+            if (emergencyRequest == null)
+            {
+                throw new RequestNotFoundException();
+            }
+            if (emergencyRequest.IsCompleted)
+            {
+                throw new RequestAlreadyCompletedException();
+            }
+
+            emergencyRequest.IsCompleted = true;
+            emergencyRequest.EndTimeStamp = DateTime.UtcNow;
+            unitOfWork.GetRepository<EmergencyRequest, int>().Update(emergencyRequest);
+            await unitOfWork.SaveChangesAsync();
+            var emergencyRequestTechnicians = await unitOfWork.GetRepository<EmergencyRequestTechnicians, int>().GetByIdAsync(requestId);
+            if (emergencyRequestTechnicians != null)
+            {
+                emergencyRequestTechnicians.CallStatus = RequestState.Completed;
+                unitOfWork.EmergencyRequestRepository.UpdateAsync(emergencyRequestTechnicians);
+                await unitOfWork.SaveChangesAsync();
+            }
 
         }
 
@@ -133,7 +160,8 @@ namespace Service.CoreServices
 
         public async Task<RequestDetailsDTO> RequestDetailsDTOs(int requestId)
         {
-            var emergencyRequest = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(requestId);
+            var spec = new RequestDetailsSpecification(requestId);
+            var emergencyRequest = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(spec);
             if (emergencyRequest == null)
             {
                 throw new RequestNotFoundException();

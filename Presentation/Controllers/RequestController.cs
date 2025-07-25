@@ -74,6 +74,16 @@ namespace Presentation.Controllers
             return Ok(ApiResponse<RequestDetailsDTO>.SuccessResponse(requestDetails, "Request details retrieved successfully."));
         }
 
+        [HttpPost("CompleteRequest/{requestId}")]
+        public async Task<IActionResult> CompleteRequest(int requestId)
+        {
+            if (requestId <= 0)
+            {
+                return BadRequest("Invalid Request ID.");
+            }
+            await serviceManager.requestServices.CompleteRequest(requestId);
+            return Ok(ApiResponse<string>.SuccessResponse(null, "Request completed successfully."));
 
+        }
     }
 }
