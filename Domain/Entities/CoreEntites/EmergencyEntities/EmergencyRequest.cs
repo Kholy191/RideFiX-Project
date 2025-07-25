@@ -10,6 +10,7 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
     public class EmergencyRequest : BaseEntity<int>
     {
+        public int Id { get; set; }
         public bool IsCompleted { get; set; }
         public DateTime TimeStamp { get; set; }
         public DateTime? EndTimeStamp { get; set; }
@@ -18,8 +19,6 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         public Double Longitude { get; set; }
         [ForeignKey("category")]
         public int categoryId { get; set; }
-        public int? Rate { get; set; }
-        public string? Comment { get; set; }
 
         //endPoint
         public DateOnly? CompeletRequestDate { get; set; } 
@@ -32,6 +31,8 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         //[NotMapped]
         //public ICollection<Technician> Technicians { get; set; } = new HashSet<Technician>();
 
+        public Review Review { get; set; }
+        public int? ReviewId { get; set; }
 
         public ICollection<EmergencyRequestTechnicians> EmergencyRequestTechnicians { get; set; } = new HashSet<EmergencyRequestTechnicians>();
         // this is for technician to make reverse request to car owner

@@ -26,6 +26,7 @@ namespace Services
                     ITechnicianService technicianService, 
                     ITechnicianRequestEmergency _tech,
                     ICategoryService categoryService,
+                    IReviewService reviewService)
                     ICarOwnerService carOwnerService)
         {
             this.requestServices = requestServices;
@@ -33,6 +34,7 @@ namespace Services
             this.technicianRequestEmergency = _tech;
             this.categoryService = categoryService;
             this.carOwnerService = carOwnerService;
+            this.reviewService = reviewService;
         }
 
 
