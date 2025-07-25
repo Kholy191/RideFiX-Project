@@ -20,12 +20,12 @@ namespace RideFix.Controllers
         [EndpointSummary("Get emegencyRequestdetails by id")]
         [ProducesResponseType(200, Type = typeof(ApiResponse<EmergencyRequestDetailsDTO>))]
         [ProducesResponseType(404, Type = typeof(ApiResponse<string>))]
-        public async Task<IActionResult> GetRequestDetailsAsync(int id)
+        public async Task<IActionResult> GetRequestDetailsAsync(int requestId, int technicianId)
         {
-            var request = await serviceManager.technicianRequestEmergency.GetRequestDetailsByIdAsync(id);
+            var request = await serviceManager.technicianRequestEmergency.GetRequestDetailsByIdAsync(requestId,technicianId);
 
             if (request == null)
-                return NotFound("requestDetails not found with this id");
+                return NotFound("Request details not found for this technician and request");
 
             return Ok(ApiResponse<EmergencyRequestDetailsDTO>.SuccessResponse(request, "request details found"));
         }
