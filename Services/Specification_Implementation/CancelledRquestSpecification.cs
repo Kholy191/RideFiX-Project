@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Service.Specification_Implementation
 {
-    public class CancelledRquestSpecification : Specification<EmergencyRequestTechnicians, int>
+    public class CancelledRquestSpecification : RequestSpecification
     {
         public CancelledRquestSpecification(int CarOwnerID) : base(e => e.EmergencyRequests.CarOwnerId == CarOwnerID)
         {

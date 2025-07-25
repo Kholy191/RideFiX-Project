@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Contracts;
+using Domain.Contracts.ReposatoriesContract;
 using Domain.Entities;
 using Presistence.Data;
 using Presistence.Repositories;
@@ -13,14 +14,18 @@ namespace Presistence.unitofwork
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
+        private IEmergencyRequestReposatory _emergencyRequestRepository;
 
         readonly Dictionary<string, object> _repositories = new Dictionary<string, object>();
 
-        public UnitOfWork(ApplicationDbContext context)
+        public UnitOfWork(ApplicationDbContext context, IEmergencyRequestReposatory emergencyRequestRepository)
         {
             _context = context;
+            _emergencyRequestRepository = emergencyRequestRepository;
         }
 
+        public IEmergencyRequestReposatory EmergencyRequestRepository => 
+            _emergencyRequestRepository ??= new EmergencyRequestReposatory(_context);
 
         public IGenericRepository<T, TK> GetRepository<T, TK>() where T : BaseEntity<TK>
         {
