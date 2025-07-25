@@ -47,6 +47,12 @@ namespace Service.CoreServices
                     emergencyRequest.CallStatus = RequestState.Cancelled;
                     await unitOfWork.EmergencyRequestRepository.UpdateAsync(emergencyRequest);
                 }
+                if (emergencyRequest.CallStatus == RequestState.Answered && emergencyRequest.EmergencyRequests.IsCompleted == false)
+                {
+                    emergencyRequest.CallStatus = RequestState.Cancelled;
+                    emergencyRequest.EmergencyRequests.EndTimeStamp = DateTime.UtcNow;
+                    await unitOfWork.EmergencyRequestRepository.UpdateAsync(emergencyRequest);
+                }
             }
             await unitOfWork.SaveChangesAsync();
 
