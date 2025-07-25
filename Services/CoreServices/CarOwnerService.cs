@@ -30,13 +30,23 @@ namespace Service.CoreServices
             var Repo = unitOfWork.GetRepository<EmergencyRequest,int>();
             var spec = new NotCompletedRequestSpecification(Id);
             var notCompletedRequests = await Repo.GetAllAsync(spec);
-            foreach (var request in notCompletedRequests)
+            if (notCompletedRequests.Any())
             {
-                foreach (var tech in request.EmergencyRequestTechnicians)
+                foreach (var request in notCompletedRequests)
                 {
-                    if (tech.CallStatus != RequestState.Rejected)
+                    foreach (var tech in request.EmergencyRequestTechnicians)
                     {
-                        return request.Id;
+                        if (tech.CallStatus != RequestState.Rejected)
+                        {
+                            return request.Id;
+                        }
+                    }
+                    foreach (var rev in request.TechReverseRequests)
+                    {
+                        if (rev.CallState == RequestState.Answered)
+                        {
+                            return request.Id;
+                        }
                     }
                 }
             }
