@@ -53,18 +53,7 @@ namespace Service.CoreServices
 
         public async Task CreateRealRequest(RealRequestDTO request)
         {
-            List<EmergencyRequestTechnicians> existingTechnicians = new List<EmergencyRequestTechnicians>();
-
-            foreach (var technicianId in request.TechnicianIDs)
-            {
-                var emergencyRequestTechnicians = new EmergencyRequestTechnicians
-                {
-                    TechnicianId = technicianId,
-                    CallStatus = RequestState.Waiting
-                };
-                existingTechnicians.Add(emergencyRequestTechnicians);
-
-            }
+           
             var emergancyRequest = new EmergencyRequest
             {
                 CarOwnerId = request.CarOwnerId,
@@ -74,26 +63,26 @@ namespace Service.CoreServices
                 IsCompleted = false,
                 TimeStamp = DateTime.UtcNow,
                 EndTimeStamp = null,
-                categoryId = request.categoryId,
-                EmergencyRequestTechnicians = existingTechnicians,
+                categoryId = request.categoryId
+              
 
             };
             
             await unitOfWork.GetRepository<EmergencyRequest, int>().AddAsync(emergancyRequest);
 
-            //if (request.TechnicianIDs != null && request.TechnicianIDs.Any())
-            //{
-            //    foreach (var technicianId in request.TechnicianIDs)
-            //    {
-            //        var emergencyRequestTechnicians = new EmergencyRequestTechnicians
-            //        {
-            //            EmergencyRequestId = emergancyRequest.Id,
-            //            TechnicianId = technicianId,
-            //            CallStatus = RequestState.Waiting
-            //        };
-            //        await unitOfWork.GetRepository<EmergencyRequestTechnicians, >().AddAsync(emergencyRequestTechnicians);
-            //    }
-            //}
+            if (request.TechnicianIDs != null && request.TechnicianIDs.Any())
+            {
+                foreach (var technicianId in request.TechnicianIDs)
+                {
+                    var emergencyRequestTechnicians = new EmergencyRequestTechnicians
+                    {
+                        EmergencyRequestId = emergancyRequest.Id,
+                        TechnicianId = technicianId,
+                        CallStatus = RequestState.Waiting
+                    };
+                    await unitOfWork.EmergencyRequestRepository.AddAsync(emergencyRequestTechnicians);
+                }
+            }
 
             await unitOfWork.SaveChangesAsync();
 
