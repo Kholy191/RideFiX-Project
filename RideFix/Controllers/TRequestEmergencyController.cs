@@ -23,7 +23,7 @@ namespace RideFix.Controllers
         [ProducesResponseType(404, Type = typeof(ApiResponse<string>))]
         public async Task<IActionResult> GetRequestDetailsAsync(int requestId, int technicianId)
         {
-            var request = await serviceManager.technicianRequestEmergency.GetRequestDetailsByIdAsync(requestId,technicianId);
+            var request = await serviceManager.technicianRequestEmergency.GetRequestDetailsByIdAsync(requestId, technicianId);
 
             if (request == null)
                 return NotFound("Request details not found for this technician and request");
@@ -39,14 +39,22 @@ namespace RideFix.Controllers
                 return NotFound(ApiResponse<string>.FailResponse("technician doesn't have requests"));
             return Ok(ApiResponse<List<EmergencyRequestDetailsDTO>>.SuccessResponse(request, "technician have requests"));
         }
-        [HttpGet("active")]
-       
-        public async Task<ActionResult<EmergencyRequestDetailsDTO>> GetAllActiveedRequests()
+        [HttpGet("active/{technicianId}")]
+
+        public async Task<ActionResult<EmergencyRequestDetailsDTO>> GetAllActiveedRequests(int technicalId)
         {
-            var request = await serviceManager.technicianRequestEmergency.GetAllActiveRequestsAsync();
-            if (request == null)
-                return NotFound(ApiResponse<string>.FailResponse("technician doesn't have requests"));
-            return Ok(ApiResponse<List<EmergencyRequestDetailsDTO>>.SuccessResponse(request, "technician have requests"));
+            try
+            {
+                var request = await serviceManager.technicianRequestEmergency.GetAllActiveRequestsAsync(technicalId);
+                int x = 9;
+                if (request == null)
+                    return NotFound(ApiResponse<string>.FailResponse("technician doesn't have requests"));
+                return Ok(ApiResponse<List<EmergencyRequestDetailsDTO>>.SuccessResponse(request, "technician have requests"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<string>.FailResponse($"An error occurred: {ex.Message}"));
+            }
         }
 
         [EndpointSummary("Get RequestsAssignedToTechnician by technicianId if it's waiting state ")]
@@ -57,7 +65,7 @@ namespace RideFix.Controllers
              to do:
             validate if technicianId found or not 
              */
-           
+
             var request = await serviceManager.technicianRequestEmergency.GetAllRequestsAssignedToTechnicianAsync(technicianId);
             if (request == null || !request.Any())
                 return NotFound(ApiResponse<string>.FailResponse("technician doesn't have requests"));
@@ -73,10 +81,21 @@ namespace RideFix.Controllers
             if (!result)
                 return BadRequest(ApiResponse<string>.FailResponse("Invalid technician, PIN, or request"));
 
-             return Ok(ApiResponse<bool>.SuccessResponse(true, "Updated successfully"));
+            return Ok(ApiResponse<bool>.SuccessResponse(true, "Updated successfully"));
         }
 
+        [HttpPost]
+        [EndpointSummary("Apply request from technical home page")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400, Type = typeof(ApiResponse<string>))]
+        public async Task<IActionResult> ApplyRequestFromHomePage([FromBody] TechnicianApplyEmergencyRequestDTO dto)
+        {
+            var result = await serviceManager.technicianRequestEmergency.ApplyRequestFromHomePage(dto);
+            if (!result)
+                return BadRequest(ApiResponse<string>.FailResponse("Invalid technician, PIN, or request"));
 
+            return Ok(ApiResponse<bool>.SuccessResponse(true, "Added successfully"));
+        }
 
     }
 }
