@@ -16,7 +16,8 @@ namespace RideFix.Controllers
         {
             serviceManager = _iServiceManager;
         }
-        [HttpGet]
+
+        [HttpGet("details/{requestId}/{technicianId}")]
         [EndpointSummary("Get emegencyRequestdetails by id")]
         [ProducesResponseType(200, Type = typeof(ApiResponse<EmergencyRequestDetailsDTO>))]
         [ProducesResponseType(404, Type = typeof(ApiResponse<string>))]
