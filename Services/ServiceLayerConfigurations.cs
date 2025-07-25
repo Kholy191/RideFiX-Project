@@ -37,6 +37,7 @@ namespace Services
             Services.AddScoped<IReviewService, ReviewService>();
 
             Services.AddAutoMapper(typeof(PreRequestMapConfig));
+            Services.AddScoped<ICarOwnerService, CarOwnerService>();
             return Services;
         }
     }
