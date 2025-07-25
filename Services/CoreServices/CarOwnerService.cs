@@ -34,18 +34,25 @@ namespace Service.CoreServices
             {
                 foreach (var request in notCompletedRequests)
                 {
-                    foreach (var tech in request.EmergencyRequestTechnicians)
+                    if (request.EmergencyRequestTechnicians != null)
                     {
-                        if (tech.CallStatus == RequestState.Answered)
+                        foreach (var tech in request.EmergencyRequestTechnicians)
                         {
-                            return mapper.Map<RequestBreifDTO>(request);
+                            if (tech.CallStatus == RequestState.Answered)
+                            {
+                                return mapper.Map<RequestBreifDTO>(request);
+                            }
                         }
                     }
-                    foreach (var rev in request.TechReverseRequests)
+
+                    if (request.TechReverseRequests != null)
                     {
-                        if (rev.CallState == RequestState.Answered)
+                        foreach (var rev in request.TechReverseRequests)
                         {
-                            return mapper.Map<RequestBreifDTO>(request);
+                            if (rev.CallState == RequestState.Answered)
+                            {
+                                return mapper.Map<RequestBreifDTO>(request);
+                            }
                         }
                     }
                 }
