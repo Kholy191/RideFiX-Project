@@ -44,7 +44,7 @@ namespace Service.CoreServices
                 if (emergencyRequest.CallStatus == RequestState.Waiting)
                 {
                     emergencyRequest.CallStatus = RequestState.Cancelled;
-                    unitOfWork.EmergencyRequestRepository.UpdateAsync(emergencyRequest);
+                    await unitOfWork.EmergencyRequestRepository.UpdateAsync(emergencyRequest);
                 }
             }
             await unitOfWork.SaveChangesAsync();
@@ -55,7 +55,12 @@ namespace Service.CoreServices
         {
             var carOwnerRepo = unitOfWork.GetRepository<CarOwner, int>();
             var specification = new CarOwnerUserPinSpecification(request);
-            if (request.pin == carOwnerRepo.GetByIdAsync(specification).Result.ApplicationUser.PIN)
+            var owner = await carOwnerRepo.GetByIdAsync(specification);
+            if (owner == null)
+            {
+                throw new CarOwnerNotFoundException();
+            }
+            if (request.pin == owner.ApplicationUser.PIN)
             {
                 var emergancyRequest = new EmergencyRequest
                 {

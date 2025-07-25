@@ -1,14 +1,17 @@
-﻿using AutoMapper;
-using Domain.Contracts;
-using Domain.Entities.CoreEntites.EmergencyEntities;
-using ServiceAbstraction.CoreServicesAbstractions;
-using SharedData.DTOs;
-using SharedData.DTOs.RequestsDTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Domain.Contracts;
+using Domain.Entities.CoreEntites.EmergencyEntities;
+using Service.Exception_Implementation.NotFoundExceptions;
+using Service.Specification_Implementation;
+using ServiceAbstraction.CoreServicesAbstractions;
+using SharedData.DTOs;
+using SharedData.DTOs.RequestsDTOs;
+using SharedData.Enums;
 
 namespace Service.CoreServices
 {
@@ -22,6 +25,23 @@ namespace Service.CoreServices
             mapper = _mapper;
         }
 
+        public async Task<int> IsRequested(int Id)
+        {
+            var Repo = unitOfWork.GetRepository<EmergencyRequest,int>();
+            var spec = new NotCompletedRequestSpecification(Id);
+            var notCompletedRequests = await Repo.GetAllAsync(spec);
+            foreach (var request in notCompletedRequests)
+            {
+                foreach (var tech in request.EmergencyRequestTechnicians)
+                {
+                    if (tech.CallStatus != RequestState.Rejected)
+                    {
+                        return request.Id;
+                    }
+                }
+            }
+            throw new RequestNotFoundException();
+        }
 
         //public async Task<bool> ConfirmPIN(ConfirmPIN_DTO PinRequest)
         //{
