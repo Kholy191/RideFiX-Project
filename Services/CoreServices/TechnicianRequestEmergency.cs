@@ -24,6 +24,16 @@ namespace Service.CoreServices.TechniciansServices
             throw new NotImplementedException();
         }
 
+        public Task<List<EmergencyRequestDetailsDTO>> GetAllAcceptedRequestsAsync(int technicianId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         //public async Task<bool> ApplyRequestFromHomePage(TechnicianApplyEmergencyRequestDTO emergencyRequestDTO)
         //{
         //    var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
@@ -40,54 +50,98 @@ namespace Service.CoreServices.TechniciansServices
 
         //}
 
-        public async Task<List<EmergencyRequestDetailsDTO>> GetAllAcceptedRequestsAsync(int tecId)
-        {
-            var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
-            var allRequests = await repo.GetAllAsync(new EmergencyRequestSpecification(new RequestQueryData() { TechnicainId = tecId, CallState = RequestState.Answered }));
-            return mapper.Map<List<EmergencyRequestDetailsDTO>>(allRequests);
-        }
+        //public async Task<List<EmergencyRequestDetailsDTO>> GetAllAcceptedRequestsAsync(int tecId)
+        //{
+        //    var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
+        //    var allRequests = await repo.GetAllAsync(new EmergencyRequestSpecification(new RequestQueryData() { TechnicainId = tecId, CallState = RequestState.Answered }));
+        //    return mapper.Map<List<EmergencyRequestDetailsDTO>>(allRequests);
+        //}
 
-        public async Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync()
-        {
-            var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
-            var allRequests = await repo.GetAllAsync(new EmergencyRequestSpecification(new RequestQueryData() { IsCompleted = false }));
-            return mapper.Map<List<EmergencyRequestDetailsDTO>>(allRequests);
+        //public async Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync()
+        //{
+        //    var repo = unitOfWork.GetRepository<EmergencyRequest, int>();
+        //    var allRequests = await repo.GetAllAsync(new EmergencyRequestSpecification(new RequestQueryData() { IsCompleted = false }));
+        //    return mapper.Map<List<EmergencyRequestDetailsDTO>>(allRequests);
 
-        }
+        //}
 
         public async Task<List<EmergencyRequestDetailsDTO>> GetAllRequestsAssignedToTechnicianAsync(int technicianId)
         {
-            var technician = await unitOfWork.GetRepository<Technician, int>().GetByIdAsync(technicianId);
-            if (technician == null)
-                return new List<EmergencyRequestDetailsDTO>();
-            var spec = new RequestsAssignedToTechnicianSpecification(technicianId, RequestState.Waiting);
+            var spec = new EmergencyRequestTechniciansAssignedToTechSpec(technicianId, RequestState.Waiting);
 
-            var requests = await unitOfWork
-                .GetRepository<EmergencyRequest, int>()
-                .GetAllAsync(spec);
+            var repo = unitOfWork.GetRepository<EmergencyRequestTechnicians, int>();
 
-            return mapper.Map<List<EmergencyRequestDetailsDTO>>(requests);
+            var assignedEntries = await repo.GetAllAsync(spec);
+
+            var result = mapper.Map<List<EmergencyRequestDetailsDTO>>(assignedEntries);
+
+            return result;
         }
 
-        public async Task<EmergencyRequestDetailsDTO> GetRequestDetailsByIdAsync(int id)
+        public async Task<EmergencyRequestDetailsDTO> GetRequestDetailsByIdAsync(int requestId, int technicianId)
         {
-            var spec= new EmergencyRequestDetailsByIdSpecification(id);
-            var request = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(spec);
-            return mapper.Map<EmergencyRequestDetailsDTO>(request);
+            var spec = new EmergencyRequestTechnicianWithRequestSpec(requestId, technicianId);
+
+            var joinEntry = await unitOfWork
+                .GetRepository<EmergencyRequestTechnicians, int>()
+                .GetByIdAsync(spec);
+
+            if (joinEntry == null)
+                return null;
+
+            return mapper.Map<EmergencyRequestDetailsDTO>(joinEntry);
         }
 
-        public async Task<bool> UpdateRequestFromCarOwnerAsync(TechnicianUpdateEmergencyRequestDTO emergencyRequestDTO)
+        public async Task<bool> UpdateRequestFromCarOwnerAsync(TechnicianUpdateEmergencyRequestDTO dto)
         {
-            var spec = new TechnicianUpdateRequestSpec(emergencyRequestDTO.RequestId, emergencyRequestDTO.TechnicianId);
+            // Verify technician + PIN
+            var techSpec = new TechnicianWithAppUserSpec(dto.TechnicianId, dto.Pin);
+            var technician = await unitOfWork.GetRepository<Technician, int>().GetByIdAsync(techSpec);
+            if (technician == null) return false;
+
+            // Load request with navigation
+            var spec = new EmergencyRequestWithTechnicianLinkSpec(dto.RequestId);
             var request = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(spec);
             if (request == null) return false;
-            var technicianSpec = new TechnicianWithAppUserSpec(emergencyRequestDTO.TechnicianId, emergencyRequestDTO.Pin);
-            var technician = await unitOfWork.GetRepository<Technician, int>().GetByIdAsync(technicianSpec);
-            if (technician == null) return false;
-            request.CallState = emergencyRequestDTO.NewStatus;
-            request.IsCompleted = emergencyRequestDTO.IsCompleted;
+
+            // Get link object
+            var link = request.EmergencyRequestTechnicians.FirstOrDefault(e => e.TechnicianId == dto.TechnicianId);
+            if (link == null) return false;
+
+            if (dto.NewStatus == RequestState.Answered)
+            {
+                // Ensure no other accepted
+                if (request.TechReverseRequests.Any(r => r.CallState == RequestState.Answered))
+                    return false;
+
+                link.CallStatus = RequestState.Answered;
+                request.IsCompleted = true;
+                request.EndTimeStamp = DateTime.UtcNow;
+
+                request.TechReverseRequests.Add(new TechReverseRequest
+                {
+                    EmergencyRequestId = dto.RequestId,
+                    TechnicianId = dto.TechnicianId,
+                    CallState = RequestState.Answered,
+                    TimeStamp = DateTime.UtcNow
+                });
+            }
+            else if (dto.NewStatus == RequestState.Rejected)
+            {
+                link.CallStatus = RequestState.Rejected;
+
+                request.TechReverseRequests.Add(new TechReverseRequest
+                {
+                    EmergencyRequestId = dto.RequestId,
+                    TechnicianId = dto.TechnicianId,
+                    CallState = RequestState.Rejected,
+                    TimeStamp = DateTime.UtcNow
+                });
+            }
+
             await unitOfWork.SaveChangesAsync();
             return true;
         }
+
     }
 }
