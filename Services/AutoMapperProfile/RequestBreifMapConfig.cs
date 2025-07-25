@@ -21,6 +21,6 @@ namespace Service.AutoMapperProfile
             {
                 dest.TechnicianName = src.Technician.ApplicationUser.Name; // can be error "Apply Specification"
             });
-                }
+        }
     }
 }

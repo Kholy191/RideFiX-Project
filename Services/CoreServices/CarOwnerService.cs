@@ -25,7 +25,7 @@ namespace Service.CoreServices
             mapper = _mapper;
         }
 
-        public async Task<int> IsRequested(int Id)
+        public async Task<RequestBreifDTO> IsRequested(int Id)
         {
             var Repo = unitOfWork.GetRepository<EmergencyRequest,int>();
             var spec = new NotCompletedRequestSpecification(Id);
@@ -38,14 +38,14 @@ namespace Service.CoreServices
                     {
                         if (tech.CallStatus != RequestState.Rejected)
                         {
-                            return request.Id;
+                            return mapper.Map<RequestBreifDTO>(request);
                         }
                     }
                     foreach (var rev in request.TechReverseRequests)
                     {
                         if (rev.CallState == RequestState.Answered)
                         {
-                            return request.Id;
+                            return mapper.Map<RequestBreifDTO>(request);
                         }
                     }
                 }
