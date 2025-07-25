@@ -34,17 +34,17 @@ namespace Service.CoreServices
         public async Task CancelAll(int CarOwnerID)
         {
             var spec = new CancelledRquestSpecification(CarOwnerID);
-            var emergencyRequests = await unitOfWork.GetRepository<EmergencyRequestTechnicians, int>().GetAllAsync();
+            var emergencyRequests = await unitOfWork.EmergencyRequestRepository.GetAllAsync(spec);
             if (emergencyRequests == null || !emergencyRequests.Any())
             {
-                //////////////////////////////////////////////////////
+                throw new RequestNotFoundException();
             }
             foreach (var emergencyRequest in emergencyRequests)
             {
                 if (emergencyRequest.CallStatus == RequestState.Waiting)
                 {
                     emergencyRequest.CallStatus = RequestState.Cancelled;
-                    unitOfWork.GetRepository<EmergencyRequestTechnicians, int>().Update(emergencyRequest);
+                    unitOfWork.EmergencyRequestRepository.UpdateAsync(emergencyRequest);
                 }
             }
             await unitOfWork.SaveChangesAsync();
@@ -53,6 +53,18 @@ namespace Service.CoreServices
 
         public async Task CreateRealRequest(RealRequestDTO request)
         {
+            List<EmergencyRequestTechnicians> existingTechnicians = new List<EmergencyRequestTechnicians>();
+
+            foreach (var technicianId in request.TechnicianIDs)
+            {
+                var emergencyRequestTechnicians = new EmergencyRequestTechnicians
+                {
+                    TechnicianId = technicianId,
+                    CallStatus = RequestState.Waiting
+                };
+                existingTechnicians.Add(emergencyRequestTechnicians);
+
+            }
             var emergancyRequest = new EmergencyRequest
             {
                 CarOwnerId = request.CarOwnerId,
@@ -62,23 +74,26 @@ namespace Service.CoreServices
                 IsCompleted = false,
                 TimeStamp = DateTime.UtcNow,
                 EndTimeStamp = null,
-                categoryId = request.categoryId
+                categoryId = request.categoryId,
+                EmergencyRequestTechnicians = existingTechnicians,
+
             };
             
             await unitOfWork.GetRepository<EmergencyRequest, int>().AddAsync(emergancyRequest);
-            if (request.TechnicianIDs != null && request.TechnicianIDs.Any())
-            {
-                foreach (var technicianId in request.TechnicianIDs)
-                {
-                    var emergencyRequestTechnicians = new EmergencyRequestTechnicians
-                    {
-                        EmergencyRequestId = emergancyRequest.Id,
-                        TechnicianId = technicianId,
-                        CallStatus = RequestState.Waiting
-                    };
-                    await unitOfWork.GetRepository<EmergencyRequestTechnicians, int>().AddAsync(emergencyRequestTechnicians);
-                }
-            }
+
+            //if (request.TechnicianIDs != null && request.TechnicianIDs.Any())
+            //{
+            //    foreach (var technicianId in request.TechnicianIDs)
+            //    {
+            //        var emergencyRequestTechnicians = new EmergencyRequestTechnicians
+            //        {
+            //            EmergencyRequestId = emergancyRequest.Id,
+            //            TechnicianId = technicianId,
+            //            CallStatus = RequestState.Waiting
+            //        };
+            //        await unitOfWork.GetRepository<EmergencyRequestTechnicians, >().AddAsync(emergencyRequestTechnicians);
+            //    }
+            //}
 
             await unitOfWork.SaveChangesAsync();
 
@@ -102,6 +117,18 @@ namespace Service.CoreServices
 
             return new PreRequestDTO { Technicians = filteredTechnicians };
 
+        }
+
+        public async Task<List<RequestBreifDTO>> RequestBreifDTOs(int carOwnerID)
+        {
+            var spec = new RequestBreifSpecification(carOwnerID);
+            var emergencyRequests = await unitOfWork.GetRepository<EmergencyRequest, int>().GetAllAsync(spec);
+            if (emergencyRequests == null || !emergencyRequests.Any())
+            {
+                throw new RequestNotFoundException();
+            }
+            var mappedRequests = mapper.Map<List<RequestBreifDTO>>(emergencyRequests);
+            return mappedRequests;
         }
     }
 }

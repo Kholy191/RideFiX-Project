@@ -28,5 +28,6 @@ namespace Presistence.Data
 
         public DbSet<EmergencyRequest> emergencyRequests { get; set; }
         public DbSet<Review> reviews { get; set; }
+        public DbSet<EmergencyRequestTechnicians> EmergencyRequestTechnicians { get; set; }
     }
 }
