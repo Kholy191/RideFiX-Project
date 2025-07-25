@@ -72,6 +72,7 @@ namespace Service.CoreServices
 
             emergencyRequest.IsCompleted = true;
             emergencyRequest.EndTimeStamp = DateTime.UtcNow;
+            emergencyRequest.CompeletRequestDate = DateOnly.FromDateTime(DateTime.UtcNow);
             unitOfWork.GetRepository<EmergencyRequest, int>().Update(emergencyRequest);
             await unitOfWork.SaveChangesAsync();
             var emergencyRequestTechnicians = await unitOfWork.GetRepository<EmergencyRequestTechnicians, int>().GetByIdAsync(requestId);

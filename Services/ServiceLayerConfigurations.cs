@@ -34,6 +34,8 @@ namespace Services
             Services.AddScoped<ITechnicianService, TechnicianService>();
             Services.AddScoped<ITechnicianRequestEmergency, TechnicianRequestEmergency>();
             Services.AddScoped<ICategoryService, CategoryService>();
+            Services.AddScoped<IReviewService, ReviewService>();
+
             Services.AddAutoMapper(typeof(PreRequestMapConfig));
             Services.AddScoped<ICarOwnerService, CarOwnerService>();
             return Services;
