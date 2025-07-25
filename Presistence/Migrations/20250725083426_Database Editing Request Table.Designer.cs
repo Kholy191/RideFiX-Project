@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Presistence.Data;
 
@@ -11,9 +12,11 @@ using Presistence.Data;
 namespace Presistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250725083426_Database Editing Request Table")]
+    partial class DatabaseEditingRequestTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -603,10 +606,9 @@ namespace Presistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.Technician", "Technician")
+                    b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.Technician", null)
                         .WithMany("EmergencyRequests")
-                        .HasForeignKey("TechnicianId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("TechnicianId");
 
                     b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.TCategory", "category")
                         .WithMany("EmergencyRequests")
@@ -615,8 +617,6 @@ namespace Presistence.Migrations
                         .IsRequired();
 
                     b.Navigation("CarOwner");
-
-                    b.Navigation("Technician");
 
                     b.Navigation("category");
                 });
@@ -632,7 +632,7 @@ namespace Presistence.Migrations
                     b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.Technician", "Technician")
                         .WithMany("EmergencyRequestTechnicians")
                         .HasForeignKey("TechnicianId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("EmergencyRequests");
@@ -724,7 +724,7 @@ namespace Presistence.Migrations
                     b.HasOne("Domain.Entities.IdentityEntities.ApplicationUser", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ApplicationUser");

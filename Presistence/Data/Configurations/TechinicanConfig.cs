@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Presistence.Data.Configurations
 {
-    internal class TechinicanConfig
+    public class TechinicanConfig : IEntityTypeConfiguration<Technician>
     {
         public void Configure(EntityTypeBuilder<Technician> builder)
         {
@@ -25,6 +25,10 @@ namespace Presistence.Data.Configurations
                    .HasForeignKey(ert => ert.TechnicianId)
                    .OnDelete(DeleteBehavior.NoAction);
 
+            builder.HasMany(te => te.EmergencyRequests)
+                .WithOne(e => e.Technician)
+                .HasForeignKey(e => e.TechnicianId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

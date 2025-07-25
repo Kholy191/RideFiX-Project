@@ -3,17 +3,17 @@ using Services.Specification_Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Specification_Implementation
 {
-    internal class EmergencyRequestDetailsByIdSpecification : Specification<EmergencyRequest, int>
-
+    public class CancelledRquestSpecification : RequestSpecification
     {
-        public EmergencyRequestDetailsByIdSpecification(int requestId) : base(req => req.Id == requestId)
+        public CancelledRquestSpecification(int CarOwnerID) : base(e => e.EmergencyRequests.CarOwnerId == CarOwnerID)
         {
-            AddInclude(req => req.CarOwner.ApplicationUser);
+            AddInclude(e => e.EmergencyRequests);           
         }
     }
 }

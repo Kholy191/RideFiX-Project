@@ -43,14 +43,28 @@ namespace Service.CoreServices.Account
 
         }
 
-        public async Task<string> LoginAsync(LoginDto dto)
+        public async Task<string> LoginAsync(LoginDto dto )
         {
+            int   roleEntityId = 0;
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password)) 
                 return null;
             var roles = await _userManager.GetRolesAsync(user);
 
-            return _jwtService.generateToken(user , roles);
+            if (roles.Contains("CarOwner"))
+            {
+                var carOwner = await _unitOfWork.GetRepository<CarOwner, int>()
+                    .GetFirstOrDefaultAsync( c => c.ApplicationUserId == user.Id);
+                if (carOwner != null) roleEntityId = carOwner.Id;
+            }
+            else if (roles.Contains("Technician"))
+            {
+                var technician = await _unitOfWork.GetRepository<Technician, int>()
+                    .GetFirstOrDefaultAsync(predicate: t => t.ApplicationUserId == user.Id);
+                if (technician != null) roleEntityId = technician.Id;
+            }
+
+            return _jwtService.generateToken(user , roles , roleEntityId);
         }
 
         public async Task<IdentityResult> RegisterStep1Async(RegisterStep1Dto dto)

@@ -10,37 +10,42 @@ namespace Service.AutoMapperProfile
         public PreRequestMapConfig()
         {
 
-            CreateMap<CreatePreRequestDTO, EmergencyRequest>()
-            .AfterMap((src, dest) =>
-            {
-                if (dest.CarOwner?.ApplicationUser != null)
-                {
-                    dest.CarOwner.ApplicationUser.PIN = src.PIN;
-                }
-            }).ReverseMap();
+            CreateMap<CreatePreRequestDTO, EmergencyRequest>().ReverseMap();
 
 
             //CreateMap<CreatePreRequestDTO, EmergencyRequest>()
             //    .ForMember(des => des.CarOwner.ApplicationUser.PIN, opt => opt.MapFrom(src => src.PIN));
-            CreateMap<EmergencyRequest, EmergencyRequestDetailsDTO>().
-                ForMember(des => des.RequestId, opt => opt.MapFrom(src => src.Id)).
-                ForMember(des => des.TechnicianId, opt => opt.MapFrom(src => src.TechnicainId)).
-               
-                ForMember(des => des.FaceImageUrl, opt => opt.MapFrom(src => src.CarOwner.ApplicationUser.FaceImageUrl)).
-                ForMember(des => des.CarOwnerName, opt => opt.MapFrom(src => src.CarOwner.ApplicationUser.Name))
-                .ReverseMap();
 
-            CreateMap<TechnicianUpdateEmergencyRequestDTO, EmergencyRequest>().
-                ForMember(des => des.Id, opt => opt.MapFrom(src => src.RequestId)).
-                ForMember(des => des.CallState, opt => opt.MapFrom(src => src.NewStatus)).
-                AfterMap((src, dest) =>
-                {
-                    if (dest.Technician?.ApplicationUser != null)
-                    {
-                        dest.Technician.ApplicationUser.PIN = src.Pin;
-                    }
-                })
-         .ReverseMap();
+            CreateMap<EmergencyRequest, EmergencyRequestDetailsDTO>()
+             .ForMember(dest => dest.RequestId, opt => opt.MapFrom(src => src.Id))
+             .ForMember(dest => dest.CarOwnerName, opt => opt.MapFrom(src => src.CarOwner.ApplicationUser.Name))
+             .ForMember(dest => dest.FaceImageUrl, opt => opt.MapFrom(src => src.CarOwner.ApplicationUser.FaceImageUrl))
+             .ForMember(dest => dest.TechnicianCallStatus, opt => opt.MapFrom((src, dest, destMember, context) =>
+             {
+                 // Resolve technicianId from context.Items
+                 if (context.Items.TryGetValue("TechnicianId", out var techIdObj) && techIdObj is int technicianId)
+                 {
+                     var relation = src.EmergencyRequestTechnicians.FirstOrDefault(e => e.TechnicianId == technicianId);
+                     return relation?.CallStatus;
+                 }
+                 return null;
+             }))
+              .ForMember(dest => dest.TechnicianId, opt => opt.MapFrom((src, dest, destMember, context) =>
+              {
+                  if (context.Items.TryGetValue("TechnicianId", out var techIdObj) && techIdObj is int technicianId)
+                  {
+                      return technicianId;
+                  }
+                  return (int?)null;
+              }))
+              .ReverseMap();
+            CreateMap<EmergencyRequestTechnicians, EmergencyRequestDetailsDTO>()
+              .ForMember(dest => dest.RequestId, opt => opt.MapFrom(src => src.EmergencyRequestId))
+              .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.EmergencyRequests.Description))
+              .ForMember(dest => dest.CarOwnerName, opt => opt.MapFrom(src => src.EmergencyRequests.CarOwner.ApplicationUser.Name))
+              .ForMember(dest => dest.FaceImageUrl, opt => opt.MapFrom(src => src.EmergencyRequests.CarOwner.ApplicationUser.FaceImageUrl))
+              .ForMember(dest => dest.TechnicianId, opt => opt.MapFrom(src => src.TechnicianId))
+              .ForMember(dest => dest.TechnicianCallStatus, opt => opt.MapFrom(src => src.CallStatus));
 
 
             //CreateMap<IEnumerable<EmergencyRequest>, List<EmergencyRequestDetailsDTO>>().
