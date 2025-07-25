@@ -48,7 +48,7 @@ namespace RideFix.Controllers
             return Ok(ApiResponse<List<EmergencyRequestDetailsDTO>>.SuccessResponse(request, "technician have requests"));
         }
 
-        [EndpointSummary("Get RequestsAssignedToTechnician by technicianId if it's waiting state")]
+        [EndpointSummary("Get RequestsAssignedToTechnician by technicianId if it's waiting state ")]
         [HttpGet("assigned/{technicianId}")]
         public async Task<IActionResult> GetAllRequestsAssignedToTechnician(int technicianId)
         {
