@@ -45,7 +45,7 @@ namespace RideFix.Controllers
         {
             var request = await serviceManager.technicianRequestEmergency.GetAllActiveRequestsAsync();
             if (request == null)
-                return NotFound(ApiResponse<string>.FailResponse("technician doesn't have requests"));
+                return NotFound("technician doesn't have requests");
             return Ok(ApiResponse<List<EmergencyRequestDetailsDTO>>.SuccessResponse(request, "technician have requests"));
         }
 

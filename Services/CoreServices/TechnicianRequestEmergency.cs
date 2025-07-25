@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities.CoreEntites.EmergencyEntities;
+using Service.Exception_Implementation.NotFoundExceptions;
 using Service.Specification_Implementation;
 using ServiceAbstraction.CoreServicesAbstractions;
 using SharedData.DTOs.TechnicianEmergencyRequestDTOs;
@@ -87,7 +88,7 @@ namespace Service.CoreServices.TechniciansServices
                 .GetByIdAsync(spec);
 
             if (joinEntry == null)
-                return null;
+                throw new TechnicianRequestsNotFoundException();
 
             return mapper.Map<EmergencyRequestDetailsDTO>(joinEntry);
         }
