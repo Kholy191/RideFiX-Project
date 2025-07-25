@@ -15,6 +15,7 @@ namespace Service.AutoMapperProfile
 
             //CreateMap<CreatePreRequestDTO, EmergencyRequest>()
             //    .ForMember(des => des.CarOwner.ApplicationUser.PIN, opt => opt.MapFrom(src => src.PIN));
+
             CreateMap<EmergencyRequest, EmergencyRequestDetailsDTO>()
              .ForMember(dest => dest.RequestId, opt => opt.MapFrom(src => src.Id))
              .ForMember(dest => dest.CarOwnerName, opt => opt.MapFrom(src => src.CarOwner.ApplicationUser.Name))
