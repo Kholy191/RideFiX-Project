@@ -8,6 +8,7 @@ namespace SharedData.DTOs.RequestsDTOs
 {
     public class RequestBreifDTO
     {
+        public int Id;
         public string TechnicianName { get; set; }
         public string CategoryName { get; set; }
         public string Description { get; set; }
