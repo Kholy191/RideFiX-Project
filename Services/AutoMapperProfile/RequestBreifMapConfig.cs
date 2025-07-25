@@ -14,6 +14,7 @@ namespace Service.AutoMapperProfile
         public RequestBreifMapConfig()
         {
             CreateMap<EmergencyRequest, RequestBreifDTO>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.TechnicianName, opt => opt.Ignore())
             .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.category.Name))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))

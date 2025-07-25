@@ -36,7 +36,7 @@ namespace Service.CoreServices
                 {
                     foreach (var tech in request.EmergencyRequestTechnicians)
                     {
-                        if (tech.CallStatus != RequestState.Rejected)
+                        if (tech.CallStatus == RequestState.Answered)
                         {
                             return mapper.Map<RequestBreifDTO>(request);
                         }
