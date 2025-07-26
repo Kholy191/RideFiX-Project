@@ -23,12 +23,23 @@ namespace RideFix.Controllers
         [ProducesResponseType(404, Type = typeof(ApiResponse<string>))]
         public async Task<IActionResult> GetRequestDetailsAsync(int requestId, int technicianId)
         {
-            var request = await serviceManager.technicianRequestEmergency.GetRequestDetailsByIdAsync(requestId, technicianId);
+            try
+            {
+                var request = await serviceManager
+                    .technicianRequestEmergency
+                    .GetRequestDetailsByIdAsync(requestId, technicianId);
 
-            if (request == null)
-                return NotFound("Request details not found for this technician and request");
+                if (request == null)
+                    return NotFound(ApiResponse<string>.FailResponse("Request details not found for this technician and request"));
 
-            return Ok(ApiResponse<EmergencyRequestDetailsDTO>.SuccessResponse(request, "request details found"));
+                return Ok(ApiResponse<EmergencyRequestDetailsDTO>.SuccessResponse(request, "Request details found"));
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"{ex.Message}");
+                return BadRequest(ApiResponse<string>.FailResponse($"An error occurred: {ex.Message}"));
+            }
         }
         [HttpGet("accepted/id")]
         [HttpGet("accepted/{technicalId}")]
@@ -81,7 +92,7 @@ namespace RideFix.Controllers
             if (!result)
                 return BadRequest(ApiResponse<string>.FailResponse("Invalid technician, PIN, or request"));
 
-            return Ok(ApiResponse<bool>.SuccessResponse(true, "Updated successfully"));
+            return Ok(ApiResponse<string>.SuccessResponse("", "Updated successfully"));
         }
 
         [HttpPost]

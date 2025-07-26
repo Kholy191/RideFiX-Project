@@ -51,11 +51,10 @@ namespace Service.AutoMapperProfile
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.CarOwnerName, opt => opt.MapFrom(src => src.CarOwner.ApplicationUser.Name))
             .ForMember(dest => dest.FaceImageUrl, opt => opt.MapFrom(src => src.CarOwner.ApplicationUser.FaceImageUrl));
-         //   .ForMember(dest => dest.TechnicianId, opt => opt.MapFrom(src => src.TechnicianId));
+         //  .ForMember(dest => dest.TechnicianId, opt => opt.MapFrom(src => src.TechnicianId));
          
 
-            //CreateMap<IEnumerable<EmergencyRequest>, List<EmergencyRequestDetailsDTO>>().
-            //    ForMember(des => des.RequestId, opt => opt.MapFrom(src => src.Id));
+            
 
         }
 
