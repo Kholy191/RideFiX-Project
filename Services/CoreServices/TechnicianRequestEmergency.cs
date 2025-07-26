@@ -30,7 +30,6 @@ namespace Service.CoreServices.TechniciansServices
 
 		public async Task<bool> ApplyRequestFromHomePage(TechnicianApplyEmergencyRequestDTO emergencyRequestDTO)
 		{
-
 			var techSpec = new TechnicianWithAppUserSpec(emergencyRequestDTO.UserId, emergencyRequestDTO.Pin);
 			var technician = await unitOfWork.GetRepository<Technician, int>().GetByIdAsync(techSpec);
 			if (technician == null) return false;
