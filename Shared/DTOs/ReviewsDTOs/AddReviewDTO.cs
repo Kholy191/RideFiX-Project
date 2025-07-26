@@ -13,5 +13,6 @@ namespace SharedData.DTOs.ReviewsDTOs
         public string Comment { get; set; }
         public int CarOwnerId { get; set; }
         public int TechnicianId { get; set; }
+        public int RequestId { get; set; }
     }
 }

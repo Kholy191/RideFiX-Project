@@ -32,7 +32,7 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
         //public ICollection<Technician> Technicians { get; set; } = new HashSet<Technician>();
 
         public Review Review { get; set; }
-        public int? ReviewId { get; set; }
+
 
         public ICollection<EmergencyRequestTechnicians> EmergencyRequestTechnicians { get; set; } = new HashSet<EmergencyRequestTechnicians>();
         // this is for technician to make reverse request to car owner
