@@ -29,7 +29,7 @@ namespace Service.CoreServices.TechniciansServices
 			var rechRequestRepo = unitOfWork.GetRepository<TechReverseRequest, int>();
 			TechReverseRequest isTechnicanExists = await rechRequestRepo.GetByIdAsync(new TechReverseRequestSpec(emergencyRequestDTO.RequestId, emergencyRequestDTO.UserId));
 
-			if (requestToUpdate != null && isTechnicanExists==null)
+			if (requestToUpdate != null && isTechnicanExists == null)
 			{
 				requestToUpdate.TechReverseRequests.Add(new TechReverseRequest
 				{
@@ -94,9 +94,9 @@ namespace Service.CoreServices.TechniciansServices
 		{
 			var spec = new EmergencyRequestTechnicianWithRequestSpec(requestId, technicianId);
 
-            var joinEntry = await unitOfWork
-                .GetRepository<EmergencyRequestTechnicians, int>()
-                .GetByIdAsync(spec);
+			var joinEntry = await unitOfWork
+				.GetRepository<EmergencyRequestTechnicians, int>()
+				.GetByIdAsync(spec);
 
             if (joinEntry == null) {
                 Console.WriteLine("join entry null");
@@ -145,7 +145,8 @@ namespace Service.CoreServices.TechniciansServices
                     }
                 }
 
-               
+                // Mark the request as completed
+                request.IsCompleted = true;
                 request.EndTimeStamp = DateTime.UtcNow;
             }
             // 5. Technician is rejecting
@@ -153,12 +154,13 @@ namespace Service.CoreServices.TechniciansServices
             {
                 targetLink.CallStatus = RequestState.Rejected;
 
-             
+               
             }
 
             await unitOfWork.SaveChangesAsync();
             return true;
         }
+
 
 
     }
