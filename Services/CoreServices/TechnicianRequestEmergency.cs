@@ -103,9 +103,11 @@ namespace Service.CoreServices.TechniciansServices
             var joinEntry = await unitOfWork
                 .GetRepository<EmergencyRequestTechnicians, int>()
                 .GetByIdAsync(spec);
-
             if (joinEntry == null)
+            {
+                Console.WriteLine("Join entry is NULL"); 
                 return null;
+            }
 
             return mapper.Map<EmergencyRequestDetailsDTO>(joinEntry);
         }
@@ -128,7 +130,7 @@ namespace Service.CoreServices.TechniciansServices
             if (targetLink == null) return false;
 
             // 4. Technician is accepting
-            if (dto.NewStatus == RequestState.Answered)
+            if (dto.RequestState == RequestState.Answered)
             {
                 // Make sure no one else has accepted
                 bool alreadyAccepted = request.EmergencyRequestTechnicians
@@ -147,12 +149,12 @@ namespace Service.CoreServices.TechniciansServices
                     }
                 }
 
-                // Mark the request as completed
-                request.IsCompleted = true;
+               
+              //  request.IsCompleted = true;
                 request.EndTimeStamp = DateTime.UtcNow;
             }
             // 5. Technician is rejecting
-            else if (dto.NewStatus == RequestState.Rejected)
+            else if (dto.RequestState == RequestState.Rejected)
             {
                 targetLink.CallStatus = RequestState.Rejected;
 
