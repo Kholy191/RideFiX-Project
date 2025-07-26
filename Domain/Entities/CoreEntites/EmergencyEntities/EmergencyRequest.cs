@@ -10,7 +10,7 @@ namespace Domain.Entities.CoreEntites.EmergencyEntities
 {
     public class EmergencyRequest : BaseEntity<int>
     {
-        public int Id { get; set; }
+        //public int Id { get; set; } //?????????????????????????????//
         public bool IsCompleted { get; set; }
         public DateTime TimeStamp { get; set; }
         public DateTime? EndTimeStamp { get; set; }

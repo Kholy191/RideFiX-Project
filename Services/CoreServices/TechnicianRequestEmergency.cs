@@ -18,16 +18,6 @@ namespace Service.CoreServices.TechniciansServices
 			unitOfWork = _unitOfWork;
 			mapper = _mapper;
 		}
-
-
-
-
-
-		//public Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync()
-		//{
-		//    throw new NotImplementedException();
-		//}
-
 		public async Task<bool> ApplyRequestFromHomePage(TechnicianApplyEmergencyRequestDTO emergencyRequestDTO)
 		{
 			var techSpec = new TechnicianWithAppUserSpec(emergencyRequestDTO.UserId, emergencyRequestDTO.Pin);
@@ -108,8 +98,13 @@ namespace Service.CoreServices.TechniciansServices
 				.GetRepository<EmergencyRequestTechnicians, int>()
 				.GetByIdAsync(spec);
 
-			if (joinEntry == null)
-				return null;
+            if (joinEntry == null) {
+                Console.WriteLine("join entry null");
+                return null;
+            }
+               
+            
+
 			return mapper.Map<EmergencyRequestDetailsDTO>(joinEntry);
 		}
 
@@ -129,27 +124,27 @@ namespace Service.CoreServices.TechniciansServices
             var link = request.EmergencyRequestTechnicians.FirstOrDefault(e => e.TechnicianId == dto.TechnicianId);
             if (link == null) return false;
 
-            //if (dto.NewStatus == RequestState.Answered)
-            //{
-            //    // Ensure no other accepted
-            //    if (request.TechReverseRequests.Any(r => r.CallState == RequestState.Answered))
-            //        return false;
+            if (dto.RequestState == RequestState.Answered)
+            {
+                // Ensure no other accepted
+                if (request.TechReverseRequests.Any(r => r.CallState == RequestState.Answered))
+                    return false;
 
             //    link.CallStatus = RequestState.Answered;
             //    request.IsCompleted = true;
             //    request.EndTimeStamp = DateTime.UtcNow;
 
-            //    request.TechReverseRequests.Add(new TechReverseRequest
-            //    {
-            //        EmergencyRequestId = dto.RequestId,
-            //        TechnicianId = dto.TechnicianId,
-            //        CallState = RequestState.Answered,
-            //        TimeStamp = DateTime.UtcNow
-            //    });
-            //}
-            //else if (dto.NewStatus == RequestState.Rejected)
-            //{
-            //    link.CallStatus = RequestState.Rejected;
+                request.TechReverseRequests.Add(new TechReverseRequest
+                {
+                    EmergencyRequestId = dto.RequestId,
+                    TechnicianId = dto.TechnicianId,
+                    CallState = RequestState.Answered,
+                    TimeStamp = DateTime.UtcNow
+                });
+            }
+            else if (dto.RequestState== RequestState.Rejected)
+            {
+                link.CallStatus = RequestState.Rejected;
 
             //    request.TechReverseRequests.Add(new TechReverseRequest
             //    {

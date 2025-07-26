@@ -17,6 +17,9 @@ namespace ServiceAbstraction.CoreServicesAbstractions
         public Task<RequestDetailsDTO> RequestDetailsDTOs(int requestId);
         public Task CompleteRequest (int requestId);
 
+        public Task<bool> IsPresent(RealRequestDTO request);
+        public Task<EmergencyTechnicianID> EmergencyTechnicianID(int requestId);
+
 
 
     }

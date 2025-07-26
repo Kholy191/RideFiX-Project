@@ -12,7 +12,7 @@ namespace SharedData.DTOs.ReviewsDTOs
         public int Rate { get; set; }
         public string Comment { get; set; }
         public int CarOwnerId { get; set; }
-        public int TechnicianId { get; set; }
+        public int? TechnicianId { get; set; }
         public int RequestId { get; set; }
     }
 }

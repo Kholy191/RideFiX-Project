@@ -85,5 +85,20 @@ namespace Presentation.Controllers
             return Ok(ApiResponse<string>.SuccessResponse(null, "Request completed successfully."));
 
         }
+
+        //[HttpGet("request/{id}")]
+        //public async Task<IActionResult> IsPresentRequest(int id)
+        //{
+        //    if (id <= 0)
+        //    {
+        //        return BadRequest("Invalid Request ID.");
+        //    }
+        //    var request = await serviceManager.requestServices.GetRequestById(id);
+        //    if (request == null)
+        //    {
+        //        return NotFound("Request not found.");
+        //    }
+        //    return Ok(ApiResponse<RealRequestDTO>.SuccessResponse(request, "Request retrieved successfully."));
+        //}
     }
 }

@@ -11,5 +11,6 @@ namespace ServiceAbstraction.CoreServicesAbstractions
     public interface ICarOwnerService
     {
         public Task<RequestBreifDTO> IsRequested(int Id);
+
     }
 }
