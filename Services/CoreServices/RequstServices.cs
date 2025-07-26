@@ -24,7 +24,9 @@ namespace Service.CoreServices
         private readonly ITechnicianService technicianService;
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
-        public RequstServices(IUnitOfWork _unitOfWork, IMapper _mapper, ITechnicianService technicianService)
+        public RequstServices(IUnitOfWork _unitOfWork,
+            IMapper _mapper,
+            ITechnicianService technicianService)
         {
 
             unitOfWork = _unitOfWork;
@@ -86,52 +88,60 @@ namespace Service.CoreServices
         }
 
         public async Task CreateRealRequest(RealRequestDTO request)
-        {
-            var carOwnerRepo = unitOfWork.GetRepository<CarOwner, int>();
-            var specification = new CarOwnerUserPinSpecification(request);
-            var owner = await carOwnerRepo.GetByIdAsync(specification);
-            if (owner == null)
+        {       
+            bool isPresent = await IsPresent(request);
+            if (!isPresent)
             {
-                throw new CarOwnerNotFoundException();
-            }
-            if (request.pin == owner.ApplicationUser.PIN)
-            {
-                var emergancyRequest = new EmergencyRequest
+                var carOwnerRepo = unitOfWork.GetRepository<CarOwner, int>();
+                var specification = new CarOwnerUserPinSpecification(request);
+                var owner = await carOwnerRepo.GetByIdAsync(specification);
+                if (owner == null)
                 {
-                    CarOwnerId = request.CarOwnerId,
-                    Description = request.Description,
-                    Latitude = request.Latitude,
-                    Longitude = request.Longitude,
-                    IsCompleted = false,
-                    TimeStamp = DateTime.UtcNow,
-                    EndTimeStamp = null,
-                    categoryId = request.categoryId
-                };
-                await unitOfWork.GetRepository<EmergencyRequest, int>().AddAsync(emergancyRequest);
-                await unitOfWork.SaveChangesAsync();
-
-
-                if (request.TechnicianIDs != null && request.TechnicianIDs.Any())
-                {
-                    foreach (var technicianId in request.TechnicianIDs)
-                    {
-                        var emergencyRequestTechnicians = new EmergencyRequestTechnicians
-                        {
-                            EmergencyRequestId = emergancyRequest.Id,
-                            TechnicianId = technicianId,
-                            CallStatus = RequestState.Waiting
-                        };
-                        await unitOfWork.EmergencyRequestRepository.AddAsync(emergencyRequestTechnicians);
-                    }
+                    throw new CarOwnerNotFoundException();
                 }
+                if (request.pin == owner.ApplicationUser.PIN)
+                {
+                    var emergancyRequest = new EmergencyRequest
+                    {
+                        CarOwnerId = request.CarOwnerId,
+                        Description = request.Description,
+                        Latitude = request.Latitude,
+                        Longitude = request.Longitude,
+                        IsCompleted = false,
+                        TimeStamp = DateTime.UtcNow,
+                        EndTimeStamp = null,
+                        categoryId = request.categoryId
+                    };
+                    await unitOfWork.GetRepository<EmergencyRequest, int>().AddAsync(emergancyRequest);
+                    await unitOfWork.SaveChangesAsync();
 
-                await unitOfWork.SaveChangesAsync();
+
+                    if (request.TechnicianIDs != null && request.TechnicianIDs.Any())
+                    {
+                        foreach (var technicianId in request.TechnicianIDs)
+                        {
+                            var emergencyRequestTechnicians = new EmergencyRequestTechnicians
+                            {
+                                EmergencyRequestId = emergancyRequest.Id,
+                                TechnicianId = technicianId,
+                                CallStatus = RequestState.Waiting
+                            };
+                            await unitOfWork.EmergencyRequestRepository.AddAsync(emergencyRequestTechnicians);
+                        }
+                    }
+
+                    await unitOfWork.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new PinCodeBadRequestException();
+                }
             }
             else
             {
-                throw new PinCodeBadRequestException();
+                throw new RequestAlreadyFoundException();
             }
-        }
+            }
 
         public async Task<PreRequestDTO> CreateRequestAsync(CreatePreRequestDTO request)
         {
@@ -150,6 +160,34 @@ namespace Service.CoreServices
             }
 
             return new PreRequestDTO { Technicians = filteredTechnicians };
+
+        }
+
+        public async Task<EmergencyTechnicianID> EmergencyTechnicianID(int requestId)
+        {
+            var emergencyTechnician = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(requestId);
+            if (emergencyTechnician == null)
+            {
+                throw new RequestNotFoundException();
+            }
+            if(emergencyTechnician.Technician == null )
+            {
+                throw new TechnicianNotFoundException();
+            }
+            var mappedTechnician = mapper.Map<EmergencyTechnicianID>(emergencyTechnician);
+            return mappedTechnician;
+        }
+
+        public async Task<bool> IsPresent(RealRequestDTO request)
+        {
+            var spec = new WaitingRequestSpecification(request.CarOwnerId);
+            var emergencyRequest = await unitOfWork.GetRepository<EmergencyRequest, int>().GetAllAsync(spec);
+            if (emergencyRequest == null || !emergencyRequest.Any())
+            {
+                return false;
+            }
+            return true;
+
 
         }
 

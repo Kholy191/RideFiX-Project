@@ -15,19 +15,30 @@ namespace Service.CoreServices
     public class ReviewService : IReviewService
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IRequestServices requestServices;
         private readonly IMapper mapper;
-        public ReviewService(IUnitOfWork _unitOfWork, IMapper _mapper)
+        public ReviewService(IUnitOfWork _unitOfWork, 
+            IMapper _mapper,
+            IRequestServices requestServices
+            )
         {
             unitOfWork = _unitOfWork;
             mapper = _mapper;
+            this.requestServices = requestServices;
         }
-        public async Task AddReviewAsync(AddReviewDTO addReview)
+        public async Task AddReviewAsync(AddReviewDTO addReview) 
         {
             if (addReview == null)
             {
                 throw new ReviewNullException();
             }
+
+            var emergencyRequest = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(addReview.RequestId);
+            var technician = await requestServices.EmergencyTechnicianID(emergencyRequest.Id);
+            addReview.TechnicianId = technician.TechnicianID;
+
             var review = mapper.Map<Review>(addReview);
+
             await unitOfWork.GetRepository<Review, int>().AddAsync(review);
             await unitOfWork.SaveChangesAsync();
         }
