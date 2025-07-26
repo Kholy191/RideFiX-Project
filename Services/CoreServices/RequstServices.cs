@@ -174,6 +174,10 @@ namespace Service.CoreServices
                 throw new RequestNotFoundException();
             }
             string city = await technicianService.GetCity(emergencyRequest.Latitude, emergencyRequest.Longitude);
+            if(emergencyRequest.Technician == null)
+            {
+                throw new RequestDetailsException();
+            }
             var mappedRequest = new RequestDetailsDTO()
             {
                 City = city,
