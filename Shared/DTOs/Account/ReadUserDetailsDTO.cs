@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace SharedData.DTOs.Account
 {
-    internal class ReadUserDetailsDTO
+    public class ReadUserDetailsDTO
     {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string FaceImageUrl { get; set; }
     }
 }

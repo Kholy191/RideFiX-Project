@@ -14,11 +14,11 @@ namespace Service.AutoMapperProfile
         public UserProfileMapConfig()
         {
 
-            CreateMap<ReadUserDetailsDTO, Technician>()
-              .ForMember(dest => dest.ApplicationUser.FaceImageUrl, opt => opt.MapFrom(src => src.FaceImageUrl))
-              .ForMember(dest => dest.ApplicationUser.Name, opt => opt.MapFrom(src => src.Name))
-              .ForMember(dest => dest.ApplicationUser.Email, opt => opt.MapFrom(src => src.Email))
-              .ReverseMap();
+            CreateMap<Technician, ReadUserDetailsDTO>()
+              .ForMember(dest => dest.FaceImageUrl, opt => opt.MapFrom(src => src.ApplicationUser.FaceImageUrl))
+              .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ApplicationUser.Name))
+              .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.ApplicationUser.Email));
+             
         }
     }
 }
