@@ -38,7 +38,8 @@ namespace Service.CoreServices
                     {
                         foreach (var tech in request.EmergencyRequestTechnicians)
                         {
-                            if (tech.CallStatus == RequestState.Answered)
+                            var flag = false;
+                            if (tech.CallStatus == RequestState.Answered || tech.CallStatus == RequestState.Waiting)
                             {
                                 return mapper.Map<RequestBreifDTO>(request);
                             }
