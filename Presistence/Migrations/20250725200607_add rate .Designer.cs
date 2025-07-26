@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Presistence.Data;
 
@@ -11,9 +12,11 @@ using Presistence.Data;
 namespace Presistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250725200607_add rate ")]
+    partial class addrate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,8 +87,8 @@ namespace Presistence.Migrations
                     b.Property<int>("CarOwnerId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly?>("CompeletRequestDate")
-                        .HasColumnType("date");
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -102,6 +105,9 @@ namespace Presistence.Migrations
 
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
+
+                    b.Property<int?>("Rate")
+                        .HasColumnType("int");
 
                     b.Property<int?>("TechnicianId")
                         .HasColumnType("int");
@@ -227,9 +233,6 @@ namespace Presistence.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EmergencyRequestId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Rate")
                         .HasColumnType("int");
 
@@ -239,10 +242,6 @@ namespace Presistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CarOwnerId");
-
-                    b.HasIndex("EmergencyRequestId")
-                        .IsUnique()
-                        .HasFilter("[EmergencyRequestId] IS NOT NULL");
 
                     b.HasIndex("TechnicianId");
 
@@ -699,11 +698,6 @@ namespace Presistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.EmergencyRequest", "EmergencyRequest")
-                        .WithOne("Review")
-                        .HasForeignKey("Domain.Entities.CoreEntites.EmergencyEntities.Review", "EmergencyRequestId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("Domain.Entities.CoreEntites.EmergencyEntities.Technician", "Technician")
                         .WithMany("reviews")
                         .HasForeignKey("TechnicianId")
@@ -711,8 +705,6 @@ namespace Presistence.Migrations
                         .IsRequired();
 
                     b.Navigation("CarOwner");
-
-                    b.Navigation("EmergencyRequest");
 
                     b.Navigation("Technician");
                 });
@@ -830,9 +822,6 @@ namespace Presistence.Migrations
             modelBuilder.Entity("Domain.Entities.CoreEntites.EmergencyEntities.EmergencyRequest", b =>
                 {
                     b.Navigation("EmergencyRequestTechnicians");
-
-                    b.Navigation("Review")
-                        .IsRequired();
 
                     b.Navigation("TechReverseRequests");
 

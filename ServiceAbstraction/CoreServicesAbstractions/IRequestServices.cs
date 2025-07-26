@@ -14,6 +14,10 @@ namespace ServiceAbstraction.CoreServicesAbstractions
         public Task CancelAll(int id);
         public Task CreateRealRequest(RealRequestDTO request);
         public Task<List<RequestBreifDTO>> RequestBreifDTOs(int carOwnerID);
-             
+        public Task<RequestDetailsDTO> RequestDetailsDTOs(int requestId);
+        public Task CompleteRequest (int requestId);
+
+
+
     }
 }

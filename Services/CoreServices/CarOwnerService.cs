@@ -25,18 +25,35 @@ namespace Service.CoreServices
             mapper = _mapper;
         }
 
-        public async Task<int> IsRequested(int Id)
+        public async Task<RequestBreifDTO> IsRequested(int Id)
         {
             var Repo = unitOfWork.GetRepository<EmergencyRequest,int>();
             var spec = new NotCompletedRequestSpecification(Id);
             var notCompletedRequests = await Repo.GetAllAsync(spec);
-            foreach (var request in notCompletedRequests)
+            if (notCompletedRequests.Any())
             {
-                foreach (var tech in request.EmergencyRequestTechnicians)
+                foreach (var request in notCompletedRequests)
                 {
-                    if (tech.CallStatus != RequestState.Rejected)
+                    if (request.EmergencyRequestTechnicians != null)
                     {
-                        return request.Id;
+                        foreach (var tech in request.EmergencyRequestTechnicians)
+                        {
+                            if (tech.CallStatus == RequestState.Answered)
+                            {
+                                return mapper.Map<RequestBreifDTO>(request);
+                            }
+                        }
+                    }
+
+                    if (request.TechReverseRequests != null)
+                    {
+                        foreach (var rev in request.TechReverseRequests)
+                        {
+                            if (rev.CallState == RequestState.Answered)
+                            {
+                                return mapper.Map<RequestBreifDTO>(request);
+                            }
+                        }
                     }
                 }
             }

@@ -14,6 +14,10 @@ namespace Service.Specification_Implementation
         public NotCompletedRequestSpecification(int Id) : base(x => x.CarOwnerId == Id && x.IsCompleted == false)
         {
             AddInclude(x => x.EmergencyRequestTechnicians);
+            AddInclude(x => x.TechReverseRequests);
+            AddInclude(x => x.category);
+            AddInclude(x => x.Technician);
+            AddInclude(x => x.Technician.ApplicationUser);
         }
     }
 }

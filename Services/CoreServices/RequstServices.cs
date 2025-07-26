@@ -8,6 +8,7 @@ using Domain.Contracts;
 using Domain.Entities.CoreEntites.EmergencyEntities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Service.Exception_Implementation;
+using Service.Exception_Implementation.AlreadyFound;
 using Service.Exception_Implementation.BadRequestExceptions;
 using Service.Exception_Implementation.NotFoundExceptions;
 using Service.Specification_Implementation;
@@ -46,8 +47,41 @@ namespace Service.CoreServices
                     emergencyRequest.CallStatus = RequestState.Cancelled;
                     await unitOfWork.EmergencyRequestRepository.UpdateAsync(emergencyRequest);
                 }
+                if (emergencyRequest.CallStatus == RequestState.Answered && emergencyRequest.EmergencyRequests.IsCompleted == false)
+                {
+                    emergencyRequest.CallStatus = RequestState.Cancelled;
+                    emergencyRequest.EmergencyRequests.EndTimeStamp = DateTime.UtcNow;
+                    await unitOfWork.EmergencyRequestRepository.UpdateAsync(emergencyRequest);
+                }
             }
             await unitOfWork.SaveChangesAsync();
+
+        }
+
+        public async Task CompleteRequest(int requestId)
+        {
+            var emergencyRequest = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(requestId);
+            if (emergencyRequest == null)
+            {
+                throw new RequestNotFoundException();
+            }
+            if (emergencyRequest.IsCompleted)
+            {
+                throw new RequestAlreadyCompletedException();
+            }
+
+            emergencyRequest.IsCompleted = true;
+            emergencyRequest.EndTimeStamp = DateTime.UtcNow;
+            emergencyRequest.CompeletRequestDate = DateOnly.FromDateTime(DateTime.UtcNow);
+            unitOfWork.GetRepository<EmergencyRequest, int>().Update(emergencyRequest);
+            await unitOfWork.SaveChangesAsync();
+            var emergencyRequestTechnicians = await unitOfWork.GetRepository<EmergencyRequestTechnicians, int>().GetByIdAsync(requestId);
+            if (emergencyRequestTechnicians != null)
+            {
+                emergencyRequestTechnicians.CallStatus = RequestState.Completed;
+                unitOfWork.EmergencyRequestRepository.UpdateAsync(emergencyRequestTechnicians);
+                await unitOfWork.SaveChangesAsync();
+            }
 
         }
 
@@ -129,6 +163,26 @@ namespace Service.CoreServices
             }
             var mappedRequests = mapper.Map<List<RequestBreifDTO>>(emergencyRequests);
             return mappedRequests;
+        }
+
+        public async Task<RequestDetailsDTO> RequestDetailsDTOs(int requestId)
+        {
+            var spec = new RequestDetailsSpecification(requestId);
+            var emergencyRequest = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(spec);
+            if (emergencyRequest == null)
+            {
+                throw new RequestNotFoundException();
+            }
+            string city = await technicianService.GetCity(emergencyRequest.Latitude, emergencyRequest.Longitude);
+            var mappedRequest = new RequestDetailsDTO()
+            {
+                City = city,
+                Description = emergencyRequest.Description,
+                TechnicianName = emergencyRequest.Technician.ApplicationUser.Name,
+                CategoryName = emergencyRequest.category.Name,
+                RequestDate = emergencyRequest.CompeletRequestDate ?? DateOnly.FromDateTime(DateTime.UtcNow)
+            };
+            return mappedRequest;
         }
     }
 }
