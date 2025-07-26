@@ -14,5 +14,8 @@ namespace Service.Specification_Implementation
         {
             AddInclude(t => t.ApplicationUser);
         }
+        public TechnicianWithAppUserSpec(int technicianId) : base(t => t.Id == technicianId) {
+            AddInclude(t => t.ApplicationUser);
+        }
     }
 }
