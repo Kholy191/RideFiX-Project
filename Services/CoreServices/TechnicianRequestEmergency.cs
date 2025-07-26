@@ -18,16 +18,6 @@ namespace Service.CoreServices.TechniciansServices
 			unitOfWork = _unitOfWork;
 			mapper = _mapper;
 		}
-
-
-
-
-
-		//public Task<List<EmergencyRequestDetailsDTO>> GetAllActiveRequestsAsync()
-		//{
-		//    throw new NotImplementedException();
-		//}
-
 		public async Task<bool> ApplyRequestFromHomePage(TechnicianApplyEmergencyRequestDTO emergencyRequestDTO)
 		{
 			var techSpec = new TechnicianWithAppUserSpec(emergencyRequestDTO.UserId, emergencyRequestDTO.Pin);
@@ -108,9 +98,12 @@ namespace Service.CoreServices.TechniciansServices
                 .GetRepository<EmergencyRequestTechnicians, int>()
                 .GetByIdAsync(spec);
 
-            if (joinEntry == null)
+            if (joinEntry == null) {
+                Console.WriteLine("join entry null");
                 return null;
             }
+               
+            
 
 			return mapper.Map<EmergencyRequestDetailsDTO>(joinEntry);
 		}
@@ -131,7 +124,7 @@ namespace Service.CoreServices.TechniciansServices
             var link = request.EmergencyRequestTechnicians.FirstOrDefault(e => e.TechnicianId == dto.TechnicianId);
             if (link == null) return false;
 
-            if (dto.NewStatus == RequestState.Answered)
+            if (dto.RequestState == RequestState.Answered)
             {
                 // Ensure no other accepted
                 if (request.TechReverseRequests.Any(r => r.CallState == RequestState.Answered))
@@ -149,7 +142,7 @@ namespace Service.CoreServices.TechniciansServices
                     TimeStamp = DateTime.UtcNow
                 });
             }
-            else if (dto.NewStatus == RequestState.Rejected)
+            else if (dto.RequestState== RequestState.Rejected)
             {
                 link.CallStatus = RequestState.Rejected;
 
