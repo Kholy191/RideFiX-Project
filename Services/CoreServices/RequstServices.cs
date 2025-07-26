@@ -9,6 +9,7 @@ using Domain.Entities.CoreEntites.EmergencyEntities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Service.Exception_Implementation;
 using Service.Exception_Implementation.AlreadyFound;
+using Service.Exception_Implementation.ArgumantNullException;
 using Service.Exception_Implementation.BadRequestExceptions;
 using Service.Exception_Implementation.NotFoundExceptions;
 using Service.Specification_Implementation;
@@ -165,6 +166,10 @@ namespace Service.CoreServices
 
         public async Task<EmergencyTechnicianID> EmergencyTechnicianID(int requestId)
         {
+            if (requestId <= 0)
+            {
+                throw new EmergencyNullException();
+            }
             var emergencyTechnician = await unitOfWork.GetRepository<EmergencyRequest, int>().GetByIdAsync(requestId);
             if (emergencyTechnician == null)
             {
