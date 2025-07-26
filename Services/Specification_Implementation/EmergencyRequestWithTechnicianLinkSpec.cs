@@ -14,6 +14,7 @@ namespace Service.Specification_Implementation
         {
             AddInclude(req => req.EmergencyRequestTechnicians);
             AddInclude(req => req.TechReverseRequests);
+            AddInclude(req => req.CarOwner.ApplicationUser);
         }
         public EmergencyRequestWithTechnicianLinkSpec(int requestId) : base(req => req.Id == requestId)
         {
