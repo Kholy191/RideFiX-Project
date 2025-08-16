@@ -79,9 +79,6 @@ namespace Services
                     IReverserRequestService reverserRequestService,
                     IReportsServices reportsServices,
 
-
-                    IReportsServices reportsServices,
-
                     IAdminService adminService,
                     IActivityReportService activityReportService)
 
