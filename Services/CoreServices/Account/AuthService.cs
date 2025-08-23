@@ -8,11 +8,13 @@ using Domain.Contracts;
 using Domain.Entities.CoreEntites.EmergencyEntities;
 using Domain.Entities.IdentityEntities;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using ServiceAbstraction.CoreServicesAbstractions.Account;
+using Services.Specification_Implementation.Emergency;
 using SharedData.DTOs.Account;
 using SharedData.Enums;
 
@@ -43,14 +45,40 @@ namespace Service.CoreServices.Account
 
         }
 
-        public async Task<string> LoginAsync(LoginDto dto)
+        public async Task<bool> CheckEmailExists(string email)
         {
+            var Email = await _userManager.FindByEmailAsync(email);
+            return (Email != null);
+        }
+
+        public async Task<string> LoginAsync(LoginDto dto )
+        {
+            int   roleEntityId = 0;
             var user = await _userManager.FindByEmailAsync(dto.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password)) 
+            if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password) ) 
                 return null;
+            if (!user.IsActivated) return "banned";
             var roles = await _userManager.GetRolesAsync(user);
 
-            return _jwtService.generateToken(user , roles);
+            if (roles.Contains("CarOwner"))
+            {
+                var carOwner = await _unitOfWork.GetRepository<CarOwner, int>()
+                    .GetFirstOrDefaultAsync( c => c.ApplicationUserId == user.Id);
+                if (carOwner != null) roleEntityId = carOwner.Id;
+            }
+            else if (roles.Contains("Technician"))
+            {
+                var technician = await _unitOfWork.GetRepository<Technician, int>()
+                    .GetFirstOrDefaultAsync(predicate: t => t.ApplicationUserId == user.Id);
+                if (technician != null) roleEntityId = technician.Id;
+            }
+            var newUser = new JwtTokenDto
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name
+            };
+            return _jwtService.generateToken(newUser, roles , roleEntityId);
         }
 
         public async Task<IdentityResult> RegisterStep1Async(RegisterStep1Dto dto)
@@ -83,12 +111,21 @@ namespace Service.CoreServices.Account
 
                 if (string.IsNullOrWhiteSpace(dto.Description))
                     errors.Add(new IdentityError { Code = "DescriptionRequired", Description = "Description is required for technicians." });
+                if (dto.Categories == null || !dto.Categories.Any())
+                {
+                    errors.Add(new IdentityError
+                    {
+                        Code = "CategoryRequired",
+                        Description = "At least one category is required for technicians."
+                    });
+                }
+
 
                 if (errors.Any())
                     return IdentityResult.Failed(errors.ToArray());
 
             }
-            _memoryCache.Set($"register_{dto.Email}", dto, TimeSpan.FromMinutes(10));
+            _memoryCache.Set($"register_{dto.Email}", dto, TimeSpan.FromMinutes(40));
 
             return IdentityResult.Success;
 
@@ -140,6 +177,7 @@ namespace Service.CoreServices.Account
                     Description = "Face doesn't match ID image."
                 });
             }
+
             var user = _mapper.Map<ApplicationUser>(step1Dto);
             user.IdentityImageUrl = identityImageUrl;
             user.FaceImageUrl = faceImageUrl;
@@ -162,12 +200,34 @@ namespace Service.CoreServices.Account
             {
                 await _userManager.AddToRoleAsync(user, Roles.Technician);
 
+                var categoryRepo = _unitOfWork.GetRepository<TCategory, int>();
+
+                var categorySpec = new CategoriesByNameSpec(step1Dto.Categories);
+
+                var categories = await categoryRepo.GetAllWithSpecAsync(categorySpec);
+
+                if (categories == null || !categories.Any())
+                {
+                    return IdentityResult.Failed(new IdentityError
+                    {
+                        Code = "InvalidCategories",
+                        Description = "One or more selected categories are invalid."
+                    });
+                }
+
+
+
                 var tech = new Technician
                 {
+
                     ApplicationUserId = user.Id,
+                    //StartWorking = start ?? default,
+                    //EndWorking = end ?? default,
                     StartWorking = step1Dto.StartWorking.Value,
                     EndWorking = step1Dto.EndWorking.Value,
-                    Description = step1Dto.Description
+                    Description = step1Dto.Description,
+                    TCategories = categories.ToList()
+
                 };
                 //add in database
                 await _unitOfWork.GetRepository<Technician, int>().AddAsync(tech);

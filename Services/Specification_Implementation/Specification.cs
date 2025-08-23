@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Contracts.SpecificationContracts;
 using Domain.Entities;
+using Service.Specification_Implementation;
 
 namespace Services.Specification_Implementation
 {
@@ -16,6 +17,11 @@ namespace Services.Specification_Implementation
         public Specification(Expression<Func<T, bool>> _criteria)
         {
             Criteria = _criteria;
+        }
+
+        public Specification()
+        {
+            Criteria = null;
         }
 
 
@@ -52,7 +58,22 @@ namespace Services.Specification_Implementation
             Skip = skip;
             Take = take;
             IsPagingEnabled = true;
-        }   
+        }
+
+        public void AddCriteria(Expression<Func<T, bool>> criteriaExpression)
+        {
+            if (Criteria == null)
+            {
+                Criteria = criteriaExpression;
+            }
+            else
+            {
+                Criteria = Criteria.AndAlso(criteriaExpression);
+            }
+        }
         #endregion
+
+        public bool? IsTracking { get; set; }
+
     }
 }

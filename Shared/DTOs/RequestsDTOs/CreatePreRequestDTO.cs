@@ -22,8 +22,7 @@ namespace SharedData.DTOs.RequestsDTOs
         [Range(-180, 180, ErrorMessage = "Longitude must be between -180 and 180.")]
         public double Longitude { get; set; }
 
-        [Required(ErrorMessage = "PIN is required.")]
-        public int PIN { get; set; }
+       
 
     }
 }
